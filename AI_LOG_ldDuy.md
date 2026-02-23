@@ -169,3 +169,164 @@ Cách làm này giúp chương trình dễ bảo trì và mở rộng.
 - Thiết kế này phù hợp với thực tế vì Mac không phải là iPhone
 - Áp dụng đúng nguyên lý **Encapsulation** và **Low Coupling**
 - Code rõ ràng, dễ hiểu, phù hợp cho bài tập OOP cơ bản
+
+📘 AI Learning Log – Abstraction & Abstract Classes (Java)
+📅 Topic
+
+Abstraction, Generalization, and Abstract Classes in Java
+
+1️⃣ Generalization (Khái quát hóa)
+
+Definition:
+Generalization is the process of grouping similar objects into a common parent class.
+
+Example
+
+Dog, Cat, Bird → Animal
+
+Car, Bike → Vehicle
+
+We create a base class to represent shared characteristics.
+
+2️⃣ Abstraction (Trừu tượng hóa)
+
+Definition:
+Abstraction focuses on defining what something does, not how it does it.
+
+Example
+
+All animals can:
+
+Move
+
+Make noise
+
+But:
+
+Dog runs
+
+Bird flies
+
+Fish swims
+
+The base class defines the behavior, but subclasses decide the implementation.
+
+3️⃣ Abstract Class
+public abstract class Animal {
+}
+Key Points
+
+Cannot be instantiated
+
+Can contain:
+
+Fields
+
+Constructors
+
+Concrete methods
+
+Abstract methods
+
+Animal a = new Animal(); // ❌ Compilation error
+4️⃣ Abstract Methods
+public abstract void move(String speed);
+public abstract void makeNoise();
+Rules
+
+Must not have a body
+
+Must end with semicolon
+
+Only allowed in abstract classes or interfaces
+
+❌ Invalid:
+
+public abstract void move() { }
+5️⃣ Full Example
+Abstract Base Class
+public abstract class Animal {
+
+    protected String type;
+    private String size;
+    private double weight;
+
+    public Animal(String type, String size, double weight) {
+        this.type = type;
+        this.size = size;
+        this.weight = weight;
+    }
+
+    public abstract void move(String speed);
+    public abstract void makeNoise();
+}
+Concrete Subclass
+public class Dog extends Animal {
+
+    public Dog(String type, String size, double weight) {
+        super(type, size, weight);
+    }
+
+    @Override
+    public void move(String speed) {
+        System.out.println("Dog runs at " + speed);
+    }
+
+    @Override
+    public void makeNoise() {
+        System.out.println("Woof!");
+    }
+}
+6️⃣ Important Concepts
+If Parent is Concrete
+
+Subclass can:
+
+Inherit method
+
+Override method
+
+Override and call super.method()
+
+If Parent is Abstract
+
+Subclass:
+
+MUST implement all abstract methods
+
+Or be declared abstract
+
+Otherwise:
+
+Compilation error
+7️⃣ Why Abstract Methods Cannot Be Private
+
+abstract → subclasses must implement
+
+private → subclasses cannot see
+
+These modifiers contradict each other → illegal combination.
+
+8️⃣ Abstract Class Constructor
+
+Even though we cannot instantiate:
+
+new Animal(); // ❌
+
+Constructor is still called when subclass is created:
+
+Dog dog = new Dog("Wolf", "Big", 40);
+
+super(...) calls the Animal constructor.
+
+9️⃣ Why Use Abstract Classes?
+
+Use abstract classes when:
+
+You want a strict parent structure
+
+You want to enforce implementation rules
+
+It makes no sense to provide default behavior
+
+Abstract classes are stricter than concrete classes.
