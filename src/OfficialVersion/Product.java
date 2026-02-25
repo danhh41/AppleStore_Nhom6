@@ -2,8 +2,10 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package V2;
+package OfficialVersion;
 
+
+import java.util.Scanner;
 /**
  *
  * @author FOTZS41
@@ -91,8 +93,14 @@ public class Product {
     public void setChip(String chip) {
         this.chip = chip;
     }
-
-    public String getInfo() {
-        return "ID: " + this.id + "Name: " + this.name + "Price: " + this.price;
-    }
+    
+    public void display() {
+        System.out.println("====================");
+        System.out.println("ID:          " + this.id);
+        System.out.println("Name:        " + this.name);
+        System.out.println("Procesor:    " + this.chip);
+        System.out.println("Price:       " + this.price);
+        System.out.println("Quantity:    " + this.quantity);
+        System.out.println("Decription:  " + this.description);
+    }    
 }
