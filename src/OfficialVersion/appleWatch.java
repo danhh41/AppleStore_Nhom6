@@ -4,9 +4,10 @@
  */
 package OfficialVersion;
 
-public class Main {
-    
-    public static void main(String[] args) {
-        Menu.startMenu();
-    }
+/**
+ *
+ * @author FOTZS41
+ */
+public class appleWatch {
+    private String ;
 }
