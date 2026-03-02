@@ -44,6 +44,7 @@ public class Menu {
                     StoreService.addIphone();
                     break;
                 case 5:
+                    StoreService.addMac();
                     break;
                 case 6:
                     break;
