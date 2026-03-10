@@ -92,7 +92,7 @@ public class Iphone extends Model{
 
     @Override
     public String toString() {
-        return "Iphone{" + super.toString() + "rearCamera=" + rearCamera + ", frontCamera=" + frontCamera + ", charging=" + charging + ", port=" + port + ", waterResistance=" + waterResistance + ", dimensions=" + dimensions + ", displayType=" + displayType + '}';
+        return "Iphone{" + super.toString() + "rearCamera=" + this.rearCamera + ", frontCamera=" + this.frontCamera + ", charging=" + this.charging + ", port=" + this.port + ", waterResistance=" + this.waterResistance + ", dimensions=" + this.dimensions + ", displayType=" + this.displayType + '}';
     }
    
     @Override
