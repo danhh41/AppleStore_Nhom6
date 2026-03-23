@@ -49,7 +49,7 @@ public abstract class Model implements Displayable, Searchable {
 
     public abstract void discountPrice(double percentage);
 
-    protected double applyDiscount(double percentage) {
+    public double applyDiscount(double percentage) {
         double saved = this.price * percentage / 100.0;
         this.price = this.price - saved;
         return saved;
