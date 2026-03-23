@@ -1,0 +1,4711 @@
+## Me:
+cách tạo .gitignore không lỗi
+
+## AI: 
+ok  Loại bỏ file rác của NetBeans (build/, nbproject/private/..) 
+
+Loại bỏ file rác của NetBeans (build/, nbproject/private/...)
+
+cái này là phần nên bỏ trong gitignore
+hướng dẫn lại từ bước tạo file
+$ git status
+On branch master
+Your branch is ahead of 'origin/master' by 1 commit.
+  (use "git push" to publish your local commits)
+
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+        modified:   .gitignore
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+        nbproject/project.properties
+
+no changes added to commit (use "git add" and/or "git commit -a")
+
+nếu muốn xóa tất cả file trên repo mà không xóa repo
+$ git checkout --orphan clean-branch
+Switched to a new branch 'clean-branch'
+
+## Me:
+FOTZS41@LEGION-R7000 MINGW64 /d/Apple_Store (clean-branch)
+$ git rm -rf .
+rm '.gitignore'
+rm 'AI_LOG.md'
+rm 'README.md'
+rm 'build.xml'
+rm 'docs/Proposal.md'
+rm 'manifest.mf'
+rm 'nbproject/build-impl.xml'
+rm 'nbproject/genfiles.properties'
+rm 'nbproject/project.properties'
+rm 'nbproject/project.xml'
+rm 'src/apple_store/Apple_Store.java'
+
+FOTZS41@LEGION-R7000 MINGW64 /d/Apple_Store (clean-branch)
+$ git commit -m "Initial clean commit"
+On branch clean-branch
+
+Initial commit
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+        nbproject/
+
+nothing added to commit but untracked files present (use "git add" to track)
+
+FOTZS41@LEGION-R7000 MINGW64 /d/Apple_Store (clean-branch)
+$ git branch -D master
+Deleted branch master (was 04db00d).
+
+FOTZS41@LEGION-R7000 MINGW64 /d/Apple_Store (clean-branch)
+$ git branch -m master
+
+FOTZS41@LEGION-R7000 MINGW64 /d/Apple_Store (master)
+$ git push -f origin master
+error: src refspec master does not match any
+error: failed to push some refs to 'https://github.com/danhh41/Apple_Store.git'
+
+FOTZS41@LEGION-R7000 MINGW64 /d/Apple_Store (master)
+$
+
+## AI:
+Bạn làm gần đúng 100% rồi, chỉ vướng 1 lỗi cốt lõi thôi
+Mình giải thích vì sao lỗi và cách sửa NGAY, không làm lại từ đầu.
+
+ VÌ SAO BẠN BỊ LỖI?
+
+Lỗi chính nằm ở đây
+
+nothing added to commit but untracked files present
+
+
+ Nghĩa là:
+
+Bạn tạo orphan branch 
+
+Bạn git rm -rf . 
+
+NHƯNG bạn chưa commit được gì cả
+
+Nên branch master hiện tại KHÔNG CÓ COMMIT NÀO
+
+ Vì vậy Git báo:
+
+src refspec master does not match any
+
+
+(= không có commit để push)
+
+ CÁCH SỬA ĐÚNG (2 CÁCH – CHỌN 1)
+ CÁCH 1 (KHUYẾN NGHỊ): Tạo commit rỗng (sạch tuyệt đối)
+
+Repo trống hoàn toàn, đúng ý bạn
+
+Chạy 1 lệnh duy nhất:
+
+git commit --allow-empty -m "Initial clean commit"
+
+
+Sau đó push:
+
+git push -f -u origin master
+
+
+ XONG
+ Repo online trống
+ Không còn lịch sử cũ
+
+ CÁCH 2: Commit 1 file giữ repo sống (ví dụ .gitignore)
+
+Nếu bạn muốn repo không trống hoàn toàn:
+
+touch .gitignore
+git add .gitignore
+git commit -m "Initial clean commit"
+git push -f -u origin master
+
+ VÌ SAO PHẢI -u origin master?
+
+Vì:
+
+Bạn vừa tạo master mới
+
+Git chưa biết master này track remote nào
+
+-u = set upstream → lần sau chỉ cần git push
+
+ KẾT QUẢ CUỐI CÙNG
+
+Sau khi làm xong, chạy:
+
+git status
+
+
+Bạn sẽ thấy:
+
+On branch master
+nothing to commit, working tree clean
+
+
+Và GitHub:
+
+Repo còn tồn tại 
+
+File = trống (hoặc chỉ có .gitignore) 
+
+Lịch sử cũ = đã xoá 
+
+ GỢI Ý AN TOÀN
+
+Nếu repo này dùng cho NetBeans sau này, mình khuyên:
+
+Commit .gitignore trước
+
+Rồi add source sau
+
+Nếu bạn muốn, mình có thể:
+
+Dẫn bạn up lại project NetBeans từ repo sạch
+
+Hoặc khôi phục lịch sử cũ nếu lỡ xoá nhầm
+
+Cứ nói tiếp nhé 
+
+## Me:
+file .jar là gì
+
+## AI:
+File .jar là viết tắt của Java ARchive – một dạng file nén chuyên dùng cho Java.
+
+1️ File .jar là gì? (nói ngắn gọn)
+
+ .jar = gói đóng gói chương trình Java
+
+Bên trong chứa:
+
+File .class (code Java đã biên dịch)
+
+Tài nguyên (ảnh, config…)
+
+META-INF/MANIFEST.MF (thông tin chạy)
+
+Cấu trúc giống .zip (có thể giải nén được)
+
+2️ File .jar dùng để làm gì?
+ Chạy chương trình Java
+java -jar app.jar
+
+ Phân phối phần mềm
+
+Gửi cho người khác chạy luôn
+
+Không cần source code
+
+ Làm thư viện (library)
+
+Import vào project khác (.jar như .dll trong C#)
+
+3️ Có mấy loại .jar?
+ 1 Executable JAR (chạy được)
+
+Có Main-Class trong MANIFEST.MF
+
+Chạy bằng:
+
+java -jar MyApp.jar
+
+ 2 Library JAR (thư viện)
+
+Không chạy trực tiếp
+
+Chỉ dùng để import
+
+ 3 Fat / Uber JAR
+
+Chứa cả thư viện phụ thuộc
+
+Chạy trên máy khác không cần setup thêm
+
+4️ File .jar có nên commit lên Git không?
+
+ KHÔNG nên commit nếu:
+
+.jar sinh ra từ build/, dist/
+
+Có thể build lại từ source
+
+ NÊN commit nếu:
+
+.jar là thư viện bên ngoài
+
+Không có source
+
+ Với NetBeans:
+
+dist/
+*.jar
+
+
+(trừ khi là thư viện ngoài)
+
+5️ Cách tạo file .jar (NetBeans)
+Trong NetBeans
+
+Right click project → Clean and Build
+
+File .jar nằm trong:
+
+dist/
+
+Dùng command line
+jar cf app.jar -C build/classes .
+
+6️ Kiểm tra nội dung .jar
+jar tf app.jar
+
+
+Hoặc đổi đuôi:
+
+app.jar → app.zip
+
+ Tóm tắt nhanh
+
+.jar = gói chương trình Java
+
+Chạy bằng java -jar
+
+Là file build → thường không commit
+
+NetBeans sinh ra trong dist/
+
+Nếu bạn muốn:
+
+Tạo jar chạy được
+
+Hiểu MANIFEST.MF
+
+Phân biệt .jar vs .war vs .ear
+
+Cứ hỏi tiếp, mình giải thích sâu cho bạn
+
+## Me:
+cách sài mermaid để vẽ flowchart
+
+## AI:
+Mermaid là ngôn ngữ dạng text dùng để vẽ sơ đồ (flowchart, sequence, class…) rất tiện khi viết Markdown, báo cáo kỹ thuật, README, hoặc dùng trong các editor hỗ trợ Mermaid.
+
+1️⃣ Cú pháp cơ bản để vẽ Flowchart bằng Mermaid
+Mẫu đơn giản nhất
+flowchart TD
+    A[Bắt đầu] --> B[Xử lý]
+    B --> C[Kết thúc]
+
+
+Giải thích:
+
+flowchart TD
+
+TD = Top → Down (trên xuống dưới)
+
+Khác: LR (trái → phải), RL, BT
+
+A, B, C là tên node
+
+Text trong [] là nội dung hiển thị
+
+--> là mũi tên luồng
+
+2️⃣ Các loại khối thường dùng trong flowchart
+flowchart TD
+    A([Bắt đầu])
+    B[Chữ nhật: Xử lý]
+    C{Hình thoi: Quyết định?}
+    D[/Nhập dữ liệu/]
+    E([Kết thúc])
+
+Ký hiệu	Ý nghĩa
+[ ]	Xử lý
+{ }	Quyết định (if/else)
+([ ])	Bắt đầu / Kết thúc
+/ /	Nhập / Xuất
+3️⃣ Flowchart menu chương trình (ví dụ thực tế)
+flowchart TD
+    A([Start])
+    B[Hiển thị Menu]
+    C{Người dùng chọn?}
+    D[Chức năng 1]
+    E[Chức năng 2]
+    F[Thoát]
+    G([End])
+
+    A --> B --> C
+    C -->|1| D --> B
+    C -->|2| E --> B
+    C -->|0| F --> G
+
+
+👉 Rất phù hợp cho “Flowchart sơ bộ: luồng hoạt động chính của chương trình (Menu)”
+
+4️⃣ Gắn nhãn cho mũi tên (if / else)
+flowchart LR
+    A{Đúng không?}
+    A -->|Yes| B[Tiếp tục]
+    A -->|No| C[Dừng]
+
+5️⃣ Đổi hướng sơ đồ
+flowchart LR   %% Left → Right
+flowchart TD   %% Top → Down
+
+6️⃣ Dùng Mermaid ở đâu?
+
+✔ Hỗ trợ tốt trong:
+
+Markdown (GitHub, GitLab)
+
+VS Code (extension Mermaid)
+
+Obsidian
+
+Typora
+
+Một số LMS / báo cáo kỹ thuật
+
+❗ Word không hỗ trợ trực tiếp (cần export sang hình)
+
+7️⃣ Mẹo khi vẽ flowchart cho báo cáo
+
+Đặt tên node ngắn gọn
+
+Không viết quá dài trong 1 khối
+
+Với menu → luôn có vòng quay lại menu
+
+Flowchart sơ bộ → không cần chi tiết code
+
+## Me: 
+viết cú pháp flowchart để add lên mermaid
+
+## AI:
+flowchart TD
+    A([Start])
+    B[Display Main Menu]
+    C{User selects an option}
+
+    D[Product Management]
+    E[Category Management]
+    F[Inventory Management]
+    G[Search / Filter Products]
+    H[Update Product Price]
+    I[Save / Load Data]
+    J[Exit System]
+
+    K([End])
+
+    A --> B --> C
+
+    C -->|1| D --> B
+    C -->|2| E --> B
+    C -->|3| F --> B
+    C -->|4| G --> B
+    C -->|5| H --> B
+    C -->|6| I --> B
+    C -->|0| J --> K
+<<<<<<< HEAD
+=======
+
+>>>>>>> 4a373ebe8b71140cfcc4e6e721bd302a21864f4a
+# Apple Store – Feature Description
+
+
+## 1. Product
+
+String id:                                              //Mã định danh duy nhất
+String name:                                            //Tên sản phẩm (ví dụ: "iPhone 15 Pro Max").
+double price:                                           //Giá bán hiện tại.
+int quantity:                                           //Số lượng tồn kho thực tế.
+String description:                                     //Mô tả chi tiết kỹ thuật.
+String categoryId:                                      //Liên kết với danh mục sản phẩm.
+
+
+- calculateDiscountedPrice(double percentage):          //Giá sau khi giảm.(theo %)
+- isStockAvailable():                                   //Sản phẩm còn hàng không.
+- getInfo()                                             //Lấy thông tin sp
+
+## 2. Category (danh mục)
+
+String categoryId:                                      //Mã danh mục
+String categoryName:                                    //Tên danh mục 
+String location:                                        //Khu vực trưng bày trong kho hoặc cửa hàng.
+
+
+- displayInfo():                                        //thông tin chi tiết danh mục or nhà cung cấp
+- setLocation(String location):                         //Vị trí shop còn hàng
+
+## 3. ProductManager
+
+List<Product> productList:                              //Danh sách tập trung toàn bộ sản phẩm để xử lý CRUD.
+int totalProducts:                                      //Biến đếm tổng số lượng chủng loại sản phẩm hiện có.
+
+- addProduct(Product p):                                //them sp.
+- updateProduct(String id, Product newInfo):            //cap nhat thong tin theo ID.
+- deleteProduct(String id):                             //xoa sp.
+- getAllProducts():                                     //tra ve danh sach tat ca sp.
+
+
+## 4. CategoryManager (quan ly danh muc)
+
+Map<String, Category> categories:                       //Sử dụng Map để truy xuất danh mục nhanh hơn qua ID.
+List<String> validCategoryNames:                        //Danh sách tên danh mục được phép sử dụng.
+
+
+- addCategory(Category c):                              //them danh muc moi.
+- getProductsByCategory(String categoryId):             //Lay tat ca sp thuoc 1 danh muc.
+- getAllCategories():                                   //Tra toan bo map
+
+## 5. Inventory (kho hang)
+
+Map<String, Integer> stockLevels:                       //Lưu trữ cặp Mã sản phẩm - Số lượng để kiểm tra nhanh.
+int lowStockThreshold:                                  //Ngưỡng cảnh báo hết hàng (dưới 10 sản phẩm là báo động).
+
+
+- updateQuantity(String productId, int amount):         //Tang giam so luong ton kho.
+- getLowStockProducts(int threshold):                   //liet ke sp sap het hang
+
+## 6. StockTransaction (giao dich kho)
+
+String transactionId:                                   //Mã giao dịch duy nhất.
+String productId:                                       //Sản phẩm nào đang được xuất/nhập.
+String type:                                            //Loại giao dịch ("IN" cho nhập kho, "OUT" cho xuất kho).
+int quantityChange:                                     //Số lượng biến động.
+String timestamp:                                       //Thời gian chính xác diễn ra giao dịch.
+
+
+- recordTransaction(String type, int qty):              //Lưu lại vết nhập/xuất kho.
+- generateReport(Date reportDate):                      //Xuất báo cáo giao dịch theo ngày.
+
+## 7. SearchService (dich vu tim kiem)
+
+List<Product> lastSearchResults:                        //Lưu lại kết quả của lần tìm kiếm/lọc gần nhất.
+
+
+- searchByName(String name):                            //Tìm kiếm gần đúng theo tên.
+- searchById(String id):                                //Tìm kiếm chính xác theo mã.
+
+## 8. FilterService (bo loc)
+
+- filterByPriceRange(double min, double max):           //Lọc sản phẩm trong tầm giá.
+- filterByStatus(boolean inStock):                      //Lọc theo trạng thái còn hàng/hết hàng.
+
+## 9. PriceManager (quan ly gia)
+
+double taxRate:                                         //Thuế VAT áp dụng cho giá sản phẩm (thường là 10% tại VN).
+String currency:                                        //Đơn vị tiền tệ (VNĐ, USD).
+
+
+- applyMassPriceUpdate(double ratio):                   //Cập nhật giá đồng loạt (tăng 10% toàn bộ).
+- setPromotionalPrice(String id, double promoPrice):    //Thiết lập giá khuyến mãi tạm thời.
+
+## 10. SystemManager (quan ly he thong)
+
+String version:                                         //Phiên bản phần mềm (ví dụ: "v1.0.2").
+boolean isDataLoaded:                                   //Trạng thái kiểm tra dữ liệu đã được tải lên từ file chưa.
+
+
+- displayMainMenu():                                    //Hiển thị danh sách các tùy chọn chính (Quản lý kho, Tìm kiếm, Báo cáo...).
+- handleUserChoice(int choice):                         //Tiếp nhận lựa chọn từ bàn phím và gọi các hàm tương ứng từ ProductManager hoặc Inventory.
+- initSystem():                                         //Khởi tạo hệ thống.
+- exitSystem():                                         //Thực hiện các thủ tục đóng chương trình (hỏi người dùng có muốn lưu trước khi thoát không và free memmory).
+- showSystemStatus():                                   //Hiển thị thông tin tổng quan về hệ thống (phiên bản, dung lượng dữ liệu hiện có, trạng thái kết nối tệp).
+project của tôi có kế thừa không
+classDiagram
+
+class Product {
+  -id: String
+  -name: String
+  -price: double
+  -quantity: int
+  -description: String
+  -categoryId: String
+
+  +calculateDiscountedPrice(percentage: double): double
+  +isStockAvailable(): boolean
+  +getInfo(): String
+}
+
+class Category {
+  -categoryId: String
+  -categoryName: String
+  -location: String
+
+  +displayInfo(): void
+  +setLocation(location: String): void
+}
+
+class ProductManager {
+  -productList: List<Product>
+  -totalProducts: int
+
+  +addProduct(p: Product): void
+  +updateProduct(id: String, newInfo: Product): void
+  +deleteProduct(id: String): void
+  +getAllProducts(): List<Product>
+}
+
+class CategoryManager {
+  -categories: Map<String, Category>
+  -validCategoryNames: List<String>
+
+  +addCategory(c: Category): void
+  +getProductsByCategory(categoryId: String): List<Product>
+  +getAllCategories(): Map<String, Category>
+}
+
+class Inventory {
+  -stockLevels: Map<String, Integer>
+  -lowStockThreshold: int
+
+  +updateQuantity(productId: String, amount: int): void
+  +getLowStockProducts(threshold: int): List<String>
+}
+
+class StockTransaction {
+  -transactionId: String
+  -productId: String
+  -type: String
+  -quantityChange: int
+  -timestamp: String
+
+  +recordTransaction(type: String, qty: int): void
+  +generateReport(reportDate: Date): String
+}
+
+class SearchService {
+  -lastSearchResults: List<Product>
+
+  +searchByName(name: String): List<Product>
+  +searchById(id: String): Product
+}
+
+class FilterService {
+  +filterByPriceRange(min: double, max: double): List<Product>
+  +filterByStatus(inStock: boolean): List<Product>
+}
+
+class PriceManager {
+  -taxRate: double
+  -currency: String
+
+  +applyMassPriceUpdate(ratio: double): void
+  +setPromotionalPrice(id: String, promoPrice: double): void
+}
+
+class SystemManager {
+  -version: String
+  -isDataLoaded: boolean
+
+  +displayMainMenu(): void
+  +handleUserChoice(choice: int): void
+  +initSystem(): void
+  +exitSystem(): void
+  +showSystemStatus(): void
+}
+đây là đoạn code add lên mermaid giờ thêm 2 class Ip với Mac để thể hiện kế thừa
+
+classDiagram
+
+class Product {
+  -id: String
+  -name: String
+  -price: double
+  -quantity: int
+  -description: String
+  -categoryId: String
+
+  +calculateDiscountedPrice(percentage: double): double
+  +isStockAvailable(): boolean
+  +getInfo(): String
+}
+
+class Category {
+  -categoryId: String
+  -categoryName: String
+  -location: String
+
+  +displayInfo(): void
+  +setLocation(location: String): void
+}
+
+class ProductManager {
+  -productList: List<Product>
+  -totalProducts: int
+
+  +addProduct(p: Product): void
+  +updateProduct(id: String, newInfo: Product): void
+  +deleteProduct(id: String): void
+  +getAllProducts(): List<Product>
+}
+
+class CategoryManager {
+  -categories: Map<String, Category>
+  -validCategoryNames: List<String>
+
+  +addCategory(c: Category): void
+  +getProductsByCategory(categoryId: String): List<Product>
+  +getAllCategories(): Map<String, Category>
+}
+
+class Inventory {
+  -stockLevels: Map<String, Integer>
+  -lowStockThreshold: int
+
+  +updateQuantity(productId: String, amount: int): void
+  +getLowStockProducts(threshold: int): List<String>
+}
+
+class StockTransaction {
+  -transactionId: String
+  -productId: String
+  -type: String
+  -quantityChange: int
+  -timestamp: String
+
+  +recordTransaction(type: String, qty: int): void
+  +generateReport(reportDate: Date): String
+}
+
+class SearchService {
+  -lastSearchResults: List<Product>
+
+  +searchByName(name: String): List<Product>
+  +searchById(id: String): Product
+}
+
+class FilterService {
+  +filterByPriceRange(min: double, max: double): List<Product>
+  +filterByStatus(inStock: boolean): List<Product>
+}
+
+class PriceManager {
+  -taxRate: double
+  -currency: String
+
+  +applyMassPriceUpdate(ratio: double): void
+  +setPromotionalPrice(id: String, promoPrice: double): void
+}
+
+class SystemManager {
+  -version: String
+  -isDataLoaded: boolean
+
+  +displayMainMenu(): void
+  +handleUserChoice(choice: int): void
+  +initSystem(): void
+  +exitSystem(): void
+  +showSystemStatus(): void
+}
+class iPhone {
+  -chip: String
+  -batteryCapacity: int
+  -screenSize: double
+
+  +getInfo(): String
+}
+
+class Mac {
+  -chip: String
+  -ram: int
+  -storage: int
+
+  +getInfo(): String
+}
+
+Product <|-- iPhone
+Product <|-- Mac
+code này khi vẽ phần method có 2 dấu 2 chấm sửa lại
+
+viết lại 2 class ip và mac trường hợp mà nó không kế thừa product (đễ dễ so sánh kế thừa với ko)
+<<<<<<< HEAD
+kế thừa tiếng anh là gì
+=======
+kế thừa tiếng anh là gì
+>>>>>>> 4a373ebe8b71140cfcc4e6e721bd302a21864f4a
+Screen Size: 6.3 inches; Display Technology: Super Retina XDR; Resolution: 2622 x 1206 pixels; Refresh Rate: 120Hz; Display Type: Dynamic Island; Rear Camera: 48MP f/1.6 OIS; Front Camera: 18MP Center Stage f/1.9; Chipset: A19 Pro; GPU: 6-core GPU; Internal Storage: 256GB; Operating System: iOS 26; Dimensions: 150 x 71.9 x 8.75 mm; Weight: 204g; Charging: MagSafe 25W, Qi2 25W; Port: USB-C; Water Resistance: IP68; Connectivity: Wi-Fi 7, Bluetooth 6; Launch Date: 09/2025; Price: 34.190.000 vnd
+{
+    "Name": "iPhone 17 Pro",
+    "ID": "iIP17P",
+}
+Name: iPhone 16 Air; ID: IP16A; Screen Size: 6.5 inches; Display Technology: Super Retina XDR; Resolution: 2736 x 1260 pixels; Refresh Rate: 120Hz; Display Type: Dynamic Island; Rear Camera: 48MP Fusion Main f/1.6; Front Camera: 18MP Center Stage; Chipset: A19 Pro; GPU: 5-core GPU; Storage: 256GB; Operating System: iOS 26; Dimensions: 156.2 × 74.7 × 5.6 mm; Weight: 165g; Charging: MagSafe 20W, Qi2 20W; Port: USB-C; Water Resistance: IP68; Connectivity: Wi-Fi 7, Bluetooth 6; Launch Date: 09/2025; Price: 24.990.000 vnd
+
+Name: iPhone 15; ID: IP15; Screen Size: 6.1 inches; Display Technology: Super Retina XDR OLED; Resolution: 2556 x 1179 pixels; Refresh Rate: 60Hz; Rear Camera: Main 48MP + 12MP; Front Camera: 12MP f/1.9; Chipset: A16 Bionic; GPU: 5-core GPU; RAM: 6GB; Storage: 256GB; Operating System: iOS 17; Dimensions: 147.6 x 71.6 x 7.8 mm; Weight: 171g; Battery: 3349 mAh; Charging: MagSafe 15W; Port: USB-C; Water Resistance: IP68; Connectivity: Wi-Fi 6, Bluetooth 5.3; Launch Date: 09/2023; Price: 20.790.000 vnd
+
+Name: iPhone 13; ID: IP13; Screen Size: 6.1 inches; Display Technology: Super Retina XDR OLED; Resolution: 2532 x 1170 pixels; Refresh Rate: 60Hz; Rear Camera: 12MP Wide + 12MP Ultra Wide; Front Camera: 12MP f/2.2; Chipset: A15; RAM: 4GB; Storage: 256GB; Operating System: iOS 15; Dimensions: 146.7 x 71.5 x 7.65 mm; Weight: 174g; Charging: 20W + Wireless; Port: Lightning; Water Resistance: IP68; Connectivity: Wi-Fi 6, Bluetooth 5.0; Launch Date: 09/2021; Price: 14.990.000 vnd
+
+Name: MacBook Air M4; ID: MAM4; CPU: 10-core; GPU: 8-core; Neural Engine: 16-core; RAM: 16GB; Storage: 256GB; Display: 13.6" Liquid Retina; Resolution: 2560 x 1664; Brightness: 500 nits; Refresh Rate: 120Hz; Weight: 1.24 kg; Battery: 53.8 Wh; Connectivity: Wi-Fi 6E, Bluetooth 5.3; OS: macOS; Price: 25.290.000 vnd
+
+Name: MacBook Air M2; ID: MAM2; CPU: Apple M2 (8-core); GPU: 8-core; Neural Engine: 16-core; RAM: 16GB; Storage: 256GB; Display: 13.6" Liquid Retina; Resolution: 2560 x 1664; Brightness: 500 nits; Refresh Rate: 120Hz; Weight: 1.27 kg; Battery: 52.6 Wh; Connectivity: Wi-Fi 6, Bluetooth 5.0; OS: macOS; Price: 19.690.000 vnd
+
+Name: MacBook Pro M4; ID: MPM4; CPU: 12-core; GPU: 16-core; Neural Engine: 16-core; RAM: 24GB; Storage: 512GB; Display: 14.2" Liquid Retina XDR; Resolution: 3024 x 1964; Brightness: 500 nits; Refresh Rate: 120Hz; Weight: 1.60 kg; Battery: 72.4 Wh; Connectivity: Wi-Fi 6E, Bluetooth 5.3; OS: macOS; Price: 49.990.000 vnd
+
+Name: MacBook Pro M5; ID: MPM5; CPU: 10-core; GPU: 10-core; Neural Engine: 16-core; RAM: 32GB; Storage: 1TB; Display: 14.2" Liquid Retina XDR; Resolution: 3024 x 1964; Brightness: 500 nits; Refresh Rate: 120Hz; Weight: 1.55 kg; Battery: 72.4 Wh; Connectivity: Wi-Fi 6E, Bluetooth 5.3; OS: macOS; Price: 51.790.000 vnd chuyển sang json
+
+Dưới đây là toàn bộ dữ liệu đã được chuyển sang JSON chuẩn:
+
+[
+  {
+    "Name": "iPhone 17 Pro",
+    "ID": "iIP17P",
+    "Screen Size": "6.3 inches",
+    "Display Technology": "Super Retina XDR",
+    "Resolution": "2622 x 1206 pixels",
+    "Refresh Rate": "120Hz",
+    "Display Type": "Dynamic Island",
+    "Rear Camera": "48MP f/1.6 OIS",
+    "Front Camera": "18MP Center Stage f/1.9",
+    "Chipset": "A19 Pro",
+    "GPU": "6-core GPU",
+    "Internal Storage": "256GB",
+    "Operating System": "iOS 26",
+    "Dimensions": "150 x 71.9 x 8.75 mm",
+    "Weight": "204g",
+    "Charging": "MagSafe 25W, Qi2 25W",
+    "Port": "USB-C",
+    "Water Resistance": "IP68",
+    "Connectivity": "Wi-Fi 7, Bluetooth 6",
+    "Launch Date": "09/2025",
+    "Price": "34.190.000 vnd"
+  },
+  {
+    "Name": "iPhone 16 Air",
+    "ID": "IP16A",
+    "Screen Size": "6.5 inches",
+    "Display Technology": "Super Retina XDR",
+    "Resolution": "2736 x 1260 pixels",
+    "Refresh Rate": "120Hz",
+    "Display Type": "Dynamic Island",
+    "Rear Camera": "48MP Fusion Main f/1.6",
+    "Front Camera": "18MP Center Stage",
+    "Chipset": "A19 Pro",
+    "GPU": "5-core GPU",
+    "Storage": "256GB",
+    "Operating System": "iOS 26",
+    "Dimensions": "156.2 × 74.7 × 5.6 mm",
+    "Weight": "165g",
+    "Charging": "MagSafe 20W, Qi2 20W",
+    "Port": "USB-C",
+    "Water Resistance": "IP68",
+    "Connectivity": "Wi-Fi 7, Bluetooth 6",
+    "Launch Date": "09/2025",
+    "Price": "24.990.000 vnd"
+  },
+  {
+    "Name": "iPhone 15",
+    "ID": "IP15",
+    "Screen Size": "6.1 inches",
+    "Display Technology": "Super Retina XDR OLED",
+    "Resolution": "2556 x 1179 pixels",
+    "Refresh Rate": "60Hz",
+    "Rear Camera": "Main 48MP + 12MP",
+    "Front Camera": "12MP f/1.9",
+    "Chipset": "A16 Bionic",
+    "GPU": "5-core GPU",
+    "RAM": "6GB",
+    "Storage": "256GB",
+    "Operating System": "iOS 17",
+    "Dimensions": "147.6 x 71.6 x 7.8 mm",
+    "Weight": "171g",
+    "Battery": "3349 mAh",
+    "Charging": "MagSafe 15W",
+    "Port": "USB-C",
+    "Water Resistance": "IP68",
+    "Connectivity": "Wi-Fi 6, Bluetooth 5.3",
+    "Launch Date": "09/2023",
+    "Price": "20.790.000 vnd"
+  },
+  {
+    "Name": "iPhone 13",
+    "ID": "IP13",
+    "Screen Size": "6.1 inches",
+    "Display Technology": "Super Retina XDR OLED",
+    "Resolution": "2532 x 1170 pixels",
+    "Refresh Rate": "60Hz",
+    "Rear Camera": "12MP Wide + 12MP Ultra Wide",
+    "Front Camera": "12MP f/2.2",
+    "Chipset": "A15",
+    "RAM": "4GB",
+    "Storage": "256GB",
+    "Operating System": "iOS 15",
+    "Dimensions": "146.7 x 71.5 x 7.65 mm",
+    "Weight": "174g",
+    "Charging": "20W + Wireless",
+    "Port": "Lightning",
+    "Water Resistance": "IP68",
+    "Connectivity": "Wi-Fi 6, Bluetooth 5.0",
+    "Launch Date": "09/2021",
+    "Price": "14.990.000 vnd"
+  },
+  {
+    "Name": "MacBook Air M4",
+    "ID": "MAM4",
+    "CPU": "10-core",
+    "GPU": "8-core",
+    "Neural Engine": "16-core",
+    "RAM": "16GB",
+    "Storage": "256GB",
+    "Display": "13.6\" Liquid Retina",
+    "Resolution": "2560 x 1664",
+    "Brightness": "500 nits",
+    "Refresh Rate": "120Hz",
+    "Weight": "1.24 kg",
+    "Battery": "53.8 Wh",
+    "Connectivity": "Wi-Fi 6E, Bluetooth 5.3",
+    "OS": "macOS",
+    "Price": "25.290.000 vnd"
+  },
+  {
+    "Name": "MacBook Air M2",
+    "ID": "MAM2",
+    "CPU": "Apple M2 (8-core)",
+    "GPU": "8-core",
+    "Neural Engine": "16-core",
+    "RAM": "16GB",
+    "Storage": "256GB",
+    "Display": "13.6\" Liquid Retina",
+    "Resolution": "2560 x 1664",
+    "Brightness": "500 nits",
+    "Refresh Rate": "120Hz",
+    "Weight": "1.27 kg",
+    "Battery": "52.6 Wh",
+    "Connectivity": "Wi-Fi 6, Bluetooth 5.0",
+    "OS": "macOS",
+    "Price": "19.690.000 vnd"
+  },
+  {
+    "Name": "MacBook Pro M4",
+    "ID": "MPM4",
+    "CPU": "12-core",
+    "GPU": "16-core",
+    "Neural Engine": "16-core",
+    "RAM": "24GB",
+    "Storage": "512GB",
+    "Display": "14.2\" Liquid Retina XDR",
+    "Resolution": "3024 x 1964",
+    "Brightness": "500 nits",
+    "Refresh Rate": "120Hz",
+    "Weight": "1.60 kg",
+    "Battery": "72.4 Wh",
+    "Connectivity": "Wi-Fi 6E, Bluetooth 5.3",
+    "OS": "macOS",
+    "Price": "49.990.000 vnd"
+  },
+  {
+    "Name": "MacBook Pro M5",
+    "ID": "MPM5",
+    "CPU": "10-core",
+    "GPU": "10-core",
+    "Neural Engine": "16-core",
+    "RAM": "32GB",
+    "Storage": "1TB",
+    "Display": "14.2\" Liquid Retina XDR",
+    "Resolution": "3024 x 1964",
+    "Brightness": "500 nits",
+    "Refresh Rate": "120Hz",
+    "Weight": "1.55 kg",
+    "Battery": "72.4 Wh",
+    "Connectivity": "Wi-Fi 6E, Bluetooth 5.3",
+    "OS": "macOS",
+    "Price": "51.790.000 vnd"
+  }
+]
+cách 1 đoạn code đọc file json tạo obj rồi add vào list
+
+Mình sẽ ví dụ bằng Java + Jackson (phổ biến nhất để đọc JSON).
+
+1️⃣ Thêm thư viện Jackson (Maven)
+<dependency>
+  <groupId>com.fasterxml.jackson.core</groupId>
+  <artifactId>jackson-databind</artifactId>
+  <version>2.17.0</version>
+</dependency>
+2️⃣ Tạo class Product
+public class Product {
+    private String Name;
+    private String ID;
+    private String Price;
+
+    // Getter & Setter
+
+    public String getName() {
+        return Name;
+    }
+
+    public void setName(String name) {
+        Name = name;
+    }
+
+    public String getID() {
+        return ID;
+    }
+
+    public void setID(String ID) {
+        this.ID = ID;
+    }
+
+    public String getPrice() {
+        return Price;
+    }
+
+    public void setPrice(String price) {
+        Price = price;
+    }
+
+    @Override
+    public String toString() {
+        return Name + " - " + Price;
+    }
+}
+3️⃣ File JSON (products.json)
+
+Giả sử file có dạng:
+
+[
+  {
+    "Name": "iPhone 17 Pro",
+    "ID": "iIP17P",
+    "Price": "34.190.000 vnd"
+  },
+  {
+    "Name": "iPhone 16 Air",
+    "ID": "IP16A",
+    "Price": "24.990.000 vnd"
+  }
+]
+4️⃣ Code đọc file → tạo object → add vào List
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+
+public class Main {
+    public static void main(String[] args) {
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+
+            // Đọc file JSON thành List<Product>
+            List<Product> productList = mapper.readValue(
+                    new File("products.json"),
+                    new TypeReference<List<Product>>() {}
+            );
+
+            // In ra để kiểm tra
+            for (Product p : productList) {
+                System.out.println(p);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+}
+🔥 Nếu muốn đọc từng object rồi add thủ công
+ObjectMapper mapper = new ObjectMapper();
+List<Product> list = new ArrayList<>();
+
+Product[] products = mapper.readValue(
+        new File("products.json"),
+        Product[].class
+);
+
+for (Product p : products) {
+    list.add(p);
+}
+🎯 Giải thích nhanh
+
+ObjectMapper → convert JSON ↔ Object
+
+TypeReference<List<Product>> → dùng khi JSON là mảng
+
+Jackson tự map key JSON vào field class (tên phải trùng)
+
+Nếu bạn đang học OOP & muốn mình giải thích cách nó ánh xạ field trong memory hoặc viết version không dùng thư viện (dùng org.json hoặc tự parse), nói mình biết nhé.
+
+[
+  {
+    "Name": "iPhone 17 Pro",
+    "ID": "iIP17P",
+    "Price": "34.190.000 vnd"
+  },
+  {
+    "Name": "iPhone 16 Air",
+    "ID": "IP16A",
+    "Price": "24.990.000 vnd"
+  }
+]
+nếu tôi muốn định dạng này dưới file txt thì làm sao ( không dùng json)
+
+Nếu không dùng JSON, bạn có thể tự định nghĩa format trong file .txt theo nhiều cách.
+Mình sẽ đưa 3 cách phổ biến (dễ parse bằng Java).
+
+✅ Cách 1: CSV (khuyên dùng – đơn giản nhất)
+📄 products.txt
+Name,ID,Price
+iPhone 17 Pro,iIP17P,34.190.000 vnd
+iPhone 16 Air,IP16A,24.990.000 vnd
+📌 Code đọc file rồi add vào List
+import java.io.*;
+import java.util.*;
+
+public class Main {
+    public static void main(String[] args) {
+        List<Product> list = new ArrayList<>();
+
+        try (BufferedReader br = new BufferedReader(new FileReader("products.txt"))) {
+            String line;
+            br.readLine(); // bỏ dòng header
+
+            while ((line = br.readLine()) != null) {
+                String[] parts = line.split(",");
+
+                Product p = new Product();
+                p.setName(parts[0]);
+                p.setID(parts[1]);
+                p.setPrice(parts[2]);
+
+                list.add(p);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        list.forEach(System.out::println);
+    }
+}
+✅ Cách 2: Tự quy định format (mỗi object cách nhau bằng dòng trống)
+📄 products.txt
+Name=iPhone 17 Pro
+ID=iIP17P
+Price=34.190.000 vnd
+
+Name=iPhone 16 Air
+ID=IP16A
+Price=24.990.000 vnd
+📌 Code đọc
+import java.io.*;
+import java.util.*;
+
+public class Main {
+    public static void main(String[] args) {
+        List<Product> list = new ArrayList<>();
+
+        try (BufferedReader br = new BufferedReader(new FileReader("products.txt"))) {
+            String line;
+            Product p = new Product();
+
+            while ((line = br.readLine()) != null) {
+
+                if (line.isEmpty()) {
+                    list.add(p);
+                    p = new Product();
+                    continue;
+                }
+
+                String[] parts = line.split("=");
+
+                switch (parts[0]) {
+                    case "Name":
+                        p.setName(parts[1]);
+                        break;
+                    case "ID":
+                        p.setID(parts[1]);
+                        break;
+                    case "Price":
+                        p.setPrice(parts[1]);
+                        break;
+                }
+            }
+
+            list.add(p); // thêm object cuối
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        list.forEach(System.out::println);
+    }
+}
+✅ Cách 3: Dùng dấu | phân cách
+📄 products.txt
+iPhone 17 Pro|iIP17P|34.190.000 vnd
+iPhone 16 Air|IP16A|24.990.000 vnd
+
+Code giống CSV nhưng đổi thành:
+
+String[] parts = line.split("\\|");
+🎯 Nên chọn cách nào?
+Cách	Độ dễ	Khuyên dùng
+CSV	⭐⭐⭐⭐	✅ Rất nên
+Key=Value	⭐⭐⭐	Nếu muốn giống object
+Tự format	⭐⭐	Không khuyến khích
+
+👉 Nếu bạn đang học OOP + file I/O, mình khuyên dùng CSV để hiểu bản chất parsing trước.
+
+Nếu muốn mình hướng dẫn thêm cách:
+
+Ghi ngược List ra file txt
+
+Xử lý lỗi khi thiếu field
+
+Tách thành Service class
+
+Cứ nói mình nhé.
+
+chuyển đoạn bạn đã chuyển sang dạng key=value
+
+Dưới đây là toàn bộ dữ liệu đã chuyển sang định dạng key=value (mỗi object cách nhau bằng 1 dòng trống):
+
+Name=iPhone 17 Pro
+ID=iIP17P
+Screen Size=6.3 inches
+Display Technology=Super Retina XDR
+Resolution=2622 x 1206 pixels
+Refresh Rate=120Hz
+Display Type=Dynamic Island
+Rear Camera=48MP f/1.6 OIS
+Front Camera=18MP Center Stage f/1.9
+Chipset=A19 Pro
+GPU=6-core GPU
+Internal Storage=256GB
+Operating System=iOS 26
+Dimensions=150 x 71.9 x 8.75 mm
+Weight=204g
+Charging=MagSafe 25W, Qi2 25W
+Port=USB-C
+Water Resistance=IP68
+Connectivity=Wi-Fi 7, Bluetooth 6
+Launch Date=09/2025
+Price=34.190.000 vnd
+
+Name=iPhone 16 Air
+ID=IP16A
+Screen Size=6.5 inches
+Display Technology=Super Retina XDR
+Resolution=2736 x 1260 pixels
+Refresh Rate=120Hz
+Display Type=Dynamic Island
+Rear Camera=48MP Fusion Main f/1.6
+Front Camera=18MP Center Stage
+Chipset=A19 Pro
+GPU=5-core GPU
+Storage=256GB
+Operating System=iOS 26
+Dimensions=156.2 × 74.7 × 5.6 mm
+Weight=165g
+Charging=MagSafe 20W, Qi2 20W
+Port=USB-C
+Water Resistance=IP68
+Connectivity=Wi-Fi 7, Bluetooth 6
+Launch Date=09/2025
+Price=24.990.000 vnd
+
+Name=iPhone 15
+ID=IP15
+Screen Size=6.1 inches
+Display Technology=Super Retina XDR OLED
+Resolution=2556 x 1179 pixels
+Refresh Rate=60Hz
+Rear Camera=Main 48MP + 12MP
+Front Camera=12MP f/1.9
+Chipset=A16 Bionic
+GPU=5-core GPU
+RAM=6GB
+Storage=256GB
+Operating System=iOS 17
+Dimensions=147.6 x 71.6 x 7.8 mm
+Weight=171g
+Battery=3349 mAh
+Charging=MagSafe 15W
+Port=USB-C
+Water Resistance=IP68
+Connectivity=Wi-Fi 6, Bluetooth 5.3
+Launch Date=09/2023
+Price=20.790.000 vnd
+
+Name=iPhone 13
+ID=IP13
+Screen Size=6.1 inches
+Display Technology=Super Retina XDR OLED
+Resolution=2532 x 1170 pixels
+Refresh Rate=60Hz
+Rear Camera=12MP Wide + 12MP Ultra Wide
+Front Camera=12MP f/2.2
+Chipset=A15
+RAM=4GB
+Storage=256GB
+Operating System=iOS 15
+Dimensions=146.7 x 71.5 x 7.65 mm
+Weight=174g
+Charging=20W + Wireless
+Port=Lightning
+Water Resistance=IP68
+Connectivity=Wi-Fi 6, Bluetooth 5.0
+Launch Date=09/2021
+Price=14.990.000 vnd
+
+Name=MacBook Air M4
+ID=MAM4
+CPU=10-core
+GPU=8-core
+Neural Engine=16-core
+RAM=16GB
+Storage=256GB
+Display=13.6" Liquid Retina
+Resolution=2560 x 1664
+Brightness=500 nits
+Refresh Rate=120Hz
+Weight=1.24 kg
+Battery=53.8 Wh
+Connectivity=Wi-Fi 6E, Bluetooth 5.3
+OS=macOS
+Price=25.290.000 vnd
+
+Name=MacBook Air M2
+ID=MAM2
+CPU=Apple M2 (8-core)
+GPU=8-core
+Neural Engine=16-core
+RAM=16GB
+Storage=256GB
+Display=13.6" Liquid Retina
+Resolution=2560 x 1664
+Brightness=500 nits
+Refresh Rate=120Hz
+Weight=1.27 kg
+Battery=52.6 Wh
+Connectivity=Wi-Fi 6, Bluetooth 5.0
+OS=macOS
+Price=19.690.000 vnd
+
+Name=MacBook Pro M4
+ID=MPM4
+CPU=12-core
+GPU=16-core
+Neural Engine=16-core
+RAM=24GB
+Storage=512GB
+Display=14.2" Liquid Retina XDR
+Resolution=3024 x 1964
+Brightness=500 nits
+Refresh Rate=120Hz
+Weight=1.60 kg
+Battery=72.4 Wh
+Connectivity=Wi-Fi 6E, Bluetooth 5.3
+OS=macOS
+Price=49.990.000 vnd
+
+Name=MacBook Pro M5
+ID=MPM5
+CPU=10-core
+GPU=10-core
+Neural Engine=16-core
+RAM=32GB
+Storage=1TB
+Display=14.2" Liquid Retina XDR
+Resolution=3024 x 1964
+Brightness=500 nits
+Refresh Rate=120Hz
+Weight=1.55 kg
+Battery=72.4 Wh
+Connectivity=Wi-Fi 6E, Bluetooth 5.3
+OS=macOS
+Price=51.790.000 vnd
+
+Nếu bạn muốn mình chỉnh lại để:
+
+Tách riêng thành 2 file (Phone.txt / Mac.txt)
+
+Chuẩn hóa key không có dấu cách (ví dụ ScreenSize thay vì Screen Size) để parse dễ hơn
+
+Hoặc format chuyên nghiệp hơn để viết parser OOP
+
+Nói mình biết nhé.
+
+nếu sc.nextLine đọc trúng dòng không có gì thì có phải nó == null không
+
+Không ❌
+
+sc.nextLine() KHÔNG trả về null khi gặp dòng trống.
+
+🎯 Phân biệt rõ:
+1️⃣ Nếu dòng đó trống (chỉ nhấn Enter)
+
+Ví dụ file:
+
+Name=iPhone 17 Pro
+
+ID=iIP17P
+
+Dòng giữa không có gì.
+
+👉 Khi đọc:
+
+String line = sc.nextLine();
+
+line sẽ bằng:
+
+""
+
+(tức là chuỗi rỗng, độ dài = 0)
+
+2️⃣ Khi nào mới là null?
+
+nextLine() không bao giờ trả về null.
+
+Nếu hết file:
+
+sc.hasNextLine() sẽ trả về false
+
+Nếu vẫn gọi nextLine() khi đã hết file → nó ném NoSuchElementException
+
+✅ Cách kiểm tra dòng trống đúng cách
+if (line.isEmpty()) {
+    // dòng trống
+}
+
+Hoặc an toàn hơn (phòng trường hợp có khoảng trắng):
+
+if (line.trim().isEmpty()) {
+    // dòng trống hoặc toàn khoảng trắng
+}
+🔥 So sánh nhanh
+Giá trị	Ý nghĩa
+null	Không có object
+""	Có object nhưng rỗng
+" "	Có nội dung là khoảng trắng
+🎓 Kết luận
+
+nextLine() gặp dòng trống → trả về ""
+
+nextLine() không bao giờ trả về null
+
+Hết file → dùng hasNextLine() để kiểm tra
+
+Nếu bạn đang viết parser dạng key=value thì mình có thể chỉ bạn cách đọc chuẩn không bị lỗi object cuối 😉
+
+line.lenght < 2 
+
+Bạn viết sai chính tả rồi 😄
+
+Không phải lenght mà là length.
+
+✅ Viết đúng:
+if (line.length() < 2) {
+    // dòng ngắn hơn 2 ký tự
+}
+🎯 Nhưng nên hiểu rõ:
+🔹 line.length() == 0
+
+→ Dòng trống hoàn toàn ("")
+
+🔹 line.length() < 2
+
+→ Bao gồm:
+
+""
+
+"a"
+
+" " (1 dấu cách)
+
+🔥 Nếu bạn muốn kiểm tra dòng trống chuẩn hơn
+
+Nên dùng:
+
+if (line.trim().isEmpty()) {
+    // dòng trống hoặc chỉ có khoảng trắng
+}
+
+Vì:
+
+"   ".length()   // = 3
+"   ".trim()     // = ""
+🎓 Khi nào dùng cái nào?
+Trường hợp	Nên dùng
+Bỏ dòng trống thật sự	isEmpty()
+Bỏ dòng chỉ có khoảng trắng	trim().isEmpty()
+Bỏ dòng ngắn (ví dụ header lỗi)	length() < x
+
+Nếu bạn đang làm parser kiểu key=value và dùng dòng trống để tách object, thì nên dùng trim().isEmpty() để tránh bug khó chịu sau này 👍
+
+String iD = inputString("Enter ID ");
+viết 1 dãy code thay thế "Enter ID" bằng những giá trị key dựa vào file bạn đã dịch cho tôi
+
+
+À mình hiểu rồi 👍
+Bạn muốn thay vì viết cứng:
+
+String iD = inputString("Enter ID ");
+
+thì sẽ tự động lấy tên key trong file txt (key=value) để làm nội dung prompt.
+
+🎯 Ý tưởng
+
+Giả sử file có dạng:
+
+Name=iPhone 17 Pro
+ID=iIP17P
+Screen Size=6.3 inches
+...
+
+Ta chỉ cần đọc phần trước dấu = → đó chính là key.
+
+✅ Code lấy key từ file và dùng làm prompt
+import java.io.*;
+import java.util.*;
+
+public class Main {
+
+    public static void main(String[] args) {
+
+        try (Scanner sc = new Scanner(new File("products.txt"))) {
+
+            while (sc.hasNextLine()) {
+                String line = sc.nextLine().trim();
+
+                if (line.isEmpty()) continue; // bỏ dòng trống
+
+                String[] parts = line.split("=");
+
+                String key = parts[0];
+
+                // Gọi inputString với key động
+                String value = inputString("Enter " + key + ": ");
+
+                System.out.println(key + " = " + value);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    // Hàm nhập chuỗi
+    public static String inputString(String message) {
+        Scanner sc = new Scanner(System.in);
+        System.out.print(message);
+        return sc.nextLine();
+    }
+}
+🔥 Nếu bạn chỉ muốn lấy danh sách key duy nhất (không lặp lại)
+
+Vì file có nhiều object, key bị lặp lại nhiều lần.
+Ta có thể dùng Set:
+
+Set<String> keys = new LinkedHashSet<>();
+
+while (sc.hasNextLine()) {
+    String line = sc.nextLine().trim();
+    if (line.isEmpty()) continue;
+
+    String key = line.split("=")[0];
+    keys.add(key);
+}
+
+for (String key : keys) {
+    String value = inputString("Enter " + key + ": ");
+}
+🎓 Kết quả
+
+Thay vì viết cứng:
+
+inputString("Enter ID");
+inputString("Enter Name");
+inputString("Enter Price");
+
+Nó sẽ tự động:
+
+Enter Name:
+Enter ID:
+Enter Screen Size:
+Enter Display Technology:
+...
+
+Nếu bạn muốn nâng level hơn (ví dụ:
+👉 chỉ lấy key của object đầu tiên
+👉 hoặc map thẳng vào constructor Product
+👉 hoặc tạo object động bằng reflection
+
+Nói mình biết, mình chỉ tiếp theo cho bạn 😎
+
+Name=iPhone 17 Pro
+ID=iIP17P
+Screen Size=6.3 inches
+Display Technology=Super Retina XDR
+Resolution=2622 x 1206 pixels
+Refresh Rate=120Hz
+Display Type=Dynamic Island
+Rear Camera=48MP f/1.6 OIS
+Front Camera=18MP Center Stage f/1.9
+Chipset=A19 Pro
+GPU=6-core GPU
+Internal Storage=256GB
+Operating System=iOS 26
+Dimensions=150 x 71.9 x 8.75 mm
+Weight=204g
+Charging=MagSafe 25W, Qi2 25W
+Port=USB-C
+Water Resistance=IP68
+Connectivity=Wi-Fi 7, Bluetooth 6
+Launch Date=09/2025
+Price=34.190.000 vnd
+tạo 1 dãy *String key = inputString("Enter key: ");*
+
+
+Ok 👍 bạn muốn mình tạo sẵn một dãy lệnh kiểu:
+
+String key = inputString("Enter key: ");
+
+dựa đúng theo danh sách key trong file bạn đưa.
+
+Dưới đây là đầy đủ theo thứ tự:
+
+String name = inputString("Enter Name: ");
+String id = inputString("Enter ID: ");
+String screenSize = inputString("Enter Screen Size: ");
+String displayTechnology = inputString("Enter Display Technology: ");
+String resolution = inputString("Enter Resolution: ");
+String refreshRate = inputString("Enter Refresh Rate: ");
+String displayType = inputString("Enter Display Type: ");
+String rearCamera = inputString("Enter Rear Camera: ");
+String frontCamera = inputString("Enter Front Camera: ");
+String chipset = inputString("Enter Chipset: ");
+String gpu = inputString("Enter GPU: ");
+String internalStorage = inputString("Enter Internal Storage: ");
+String operatingSystem = inputString("Enter Operating System: ");
+String dimensions = inputString("Enter Dimensions: ");
+String weight = inputString("Enter Weight: ");
+String charging = inputString("Enter Charging: ");
+String port = inputString("Enter Port: ");
+String waterResistance = inputString("Enter Water Resistance: ");
+String connectivity = inputString("Enter Connectivity: ");
+String launchDate = inputString("Enter Launch Date: ");
+String price = inputString("Enter Price: ");
+🎯 Nếu bạn muốn chuẩn OOP hơn
+
+Sau đó có thể tạo object:
+
+Product p = new Product(
+    name, id, screenSize, displayTechnology, resolution,
+    refreshRate, displayType, rearCamera, frontCamera,
+    chipset, gpu, internalStorage, operatingSystem,
+    dimensions, weight, charging, port,
+    waterResistance, connectivity, launchDate, price
+);
+
+Nếu bạn muốn mình chỉnh lại thành:
+
+biến camelCase chuẩn Java không có khoảng trắng
+
+hoặc tự động sinh code từ file (không cần viết tay)
+
+hoặc tạo constructor đầy đủ cho class Product
+
+Nói mình biết nhé 😉
+
+Name=MacBook Pro M5
+ID=MPM5
+CPU=10-core
+GPU=10-core
+Neural Engine=16-core
+RAM=32GB
+Storage=1TB
+Display=14.2" Liquid Retina XDR
+Resolution=3024 x 1964
+Brightness=500 nits
+Refresh Rate=120Hz
+Weight=1.55 kg
+Battery=72.4 Wh
+Connectivity=Wi-Fi 6E, Bluetooth 5.3
+OS=macOS
+Price=51.790.000 vnd
+
+Dưới đây là dãy lệnh inputString tương ứng với danh sách key bạn đưa:
+
+String name = inputString("Enter Name: ");
+String id = inputString("Enter ID: ");
+String cpu = inputString("Enter CPU: ");
+String gpu = inputString("Enter GPU: ");
+String neuralEngine = inputString("Enter Neural Engine: ");
+String ram = inputString("Enter RAM: ");
+String storage = inputString("Enter Storage: ");
+String display = inputString("Enter Display: ");
+String resolution = inputString("Enter Resolution: ");
+String brightness = inputString("Enter Brightness: ");
+String refreshRate = inputString("Enter Refresh Rate: ");
+String weight = inputString("Enter Weight: ");
+String battery = inputString("Enter Battery: ");
+String connectivity = inputString("Enter Connectivity: ");
+String os = inputString("Enter OS: ");
+String price = inputString("Enter Price: ");
+
+Nếu bạn muốn mình:
+
+Tạo luôn constructor MacBook đầy đủ
+
+Viết class MacBook với getter/setter
+
+Hoặc gộp chung Product cho cả Phone và Mac
+
+Nói mình biết bạn đang thiết kế theo hướng nào (inheritance hay 1 class chung) nhé 😎
+public static void addMac() {
+//
+//        System.out.println("Enter ID: ");
+//        String id = sc.nextLine();
+//        System.out.println("Enter Name: ");
+//        String name = sc.nextLine();
+//        System.out.println("Enter Procesor: ");
+//        String chip = sc.nextLine();
+//        System.out.println("Enter Price: ");
+//        double price = Double.parseDouble(sc.nextLine());
+//        System.out.println("Enter Quantity: ");
+//        int quan = Integer.parseInt(sc.nextLine());
+//        System.out.println("Enter Description: ");
+//        String des = sc.nextLine();
+//        System.out.println("Enter Category ID: ");
+//        String cat = sc.nextLine();
+//        System.out.println("Enter Ram: ");
+//        int ram = Integer.parseInt(sc.nextLine());
+//        System.out.println("Enter Storage: ");
+//        int sto = Integer.parseInt(sc.nextLine());
+//
+//        //Mac mac = new Mac(ram, sto, id, name, chip, price, quan, des, cat);
+////        macList.add(mac);
+//        //list.add(mac);
+//
+//        System.out.println("Created successfully!");
+//    }
+có cách nào làm cho đoạn code này ngắn đi không, hiện tại tôi đang có rất nhiều abstrc
+
+Có 👍 — đoạn code của bạn đang bị lặp lại rất nhiều thao tác nhập dữ liệu. Khi làm với nhiều class (abstract + subclass như Mac, Laptop, Phone…), cách tối ưu là:
+
+✅ Cách 1: Tách hàm nhập dữ liệu dùng chung (Khuyên dùng)
+Tạo các method hỗ trợ:
+
+public static String inputString(String message) {
+    System.out.print(message);
+    return sc.nextLine();
+}
+
+public static int inputInt(String message) {
+    System.out.print(message);
+    return Integer.parseInt(sc.nextLine());
+}
+
+public static double inputDouble(String message) {
+    System.out.print(message);
+    return Double.parseDouble(sc.nextLine());
+}
+✨ Sau đó addMac() sẽ ngắn lại còn:
+public static void addMac() {
+
+    String id = inputString("Enter ID: ");
+    String name = inputString("Enter Name: ");
+    String chip = inputString("Enter Processor: ");
+    double price = inputDouble("Enter Price: ");
+    int quan = inputInt("Enter Quantity: ");
+    String des = inputString("Enter Description: ");
+    String cat = inputString("Enter Category ID: ");
+    int ram = inputInt("Enter RAM: ");
+    int sto = inputInt("Enter Storage: ");
+
+    Mac mac = new Mac(ram, sto, id, name, chip, price, quan, des, cat);
+    macList.add(mac);
+
+    System.out.println("Created successfully!");
+}
+👉 Code sạch hơn rất nhiều
+👉 Dùng lại được cho tất cả class khác
+
+✅ Cách 2: Nếu bạn có abstract class cha (Best OOP way)
+Giả sử bạn có:
+
+abstract class Product {
+    protected String id;
+    protected String name;
+    protected String chip;
+    protected double price;
+    protected int quantity;
+    protected String description;
+    protected String categoryId;
+}
+Bạn có thể tạo constructor trong class cha để giảm tham số:
+
+public Product(String id, String name, String chip, double price,
+               int quantity, String description, String categoryId) {
+    this.id = id;
+    this.name = name;
+    this.chip = chip;
+    this.price = price;
+    this.quantity = quantity;
+    this.description = description;
+    this.categoryId = categoryId;
+}
+Sau đó Mac chỉ cần:
+
+public class Mac extends Product {
+    private int ram;
+    private int storage;
+
+    public Mac(int ram, int storage, String id, String name, String chip,
+               double price, int quantity, String description, String categoryId) {
+
+        super(id, name, chip, price, quantity, description, categoryId);
+        this.ram = ram;
+        this.storage = storage;
+    }
+}
+👉 Code gọn hơn
+👉 Không phải lặp lại field trong từng class
+
+✅ Cách 3: Dùng Builder Pattern (nâng cao – nếu bạn có rất nhiều field)
+Nếu project lớn, nhiều abstract + nhiều field, bạn nên học Builder Pattern.
+Nó giúp tránh constructor dài 10–15 tham số.
+
+🚀 Gợi ý thêm cho bạn
+Vì bạn nói đang có rất nhiều abstract, mình đoán bạn đang làm:
+
+Product → Mac
+
+Product → Laptop
+
+Product → Phone
+
+…
+
+Bạn nên:
+
+Tạo method inputBasicProductInfo()
+
+Sau đó mỗi class chỉ nhập thêm phần riêng (RAM, Storage…)
+
+Ví dụ:
+
+public static Product inputBasicInfo() {
+    String id = inputString("Enter ID: ");
+    String name = inputString("Enter Name: ");
+    String chip = inputString("Enter Processor: ");
+    double price = inputDouble("Enter Price: ");
+    int quan = inputInt("Enter Quantity: ");
+    String des = inputString("Enter Description: ");
+    String cat = inputString("Enter Category ID: ");
+
+    return new Product(id, name, chip, price, quan, des, cat);
+}
+Rồi Mac chỉ cần thêm:
+
+int ram = inputInt("Enter RAM: ");
+int sto = inputInt("Enter Storage: ");
+📌 Kết luận
+Nếu muốn gọn nhanh → Tách hàm input
+Nếu muốn đúng OOP → Constructor cha + super()
+Nếu muốn chuyên nghiệp → Builder Pattern
+
+Nếu bạn muốn mình refactor toàn bộ cấu trúc project của bạn cho gọn hơn (theo kiểu OOP chuẩn), gửi mình:
+
+Class cha
+
+1 class con
+
+Cách bạn đang lưu list
+
+Mình sẽ chỉnh lại cho bạn theo kiểu “clean code” luôn 🔥
+
+
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package OfficialVersion;
+
+import java.util.Scanner;
+
+public class Model {
+
+    private String id;
+    private String name;
+
+    private String screenSize;
+    private String displayTechnology;
+    private String resolution;
+    private String refreshRate;
+
+    private String cpu;
+    private String gpu;
+    private String ram;
+
+    private String storage;
+    private String os;
+
+    private String connectivity;
+    private String weight;
+    private String launchDate;
+    private String price;
+
+    public Model() {
+    }
+
+    public Model(String id, String name, String screenSize, String displayTechnology, String resolution, 
+            String refreshRate, String cpu, String gpu, String ram, String storage, String os, String connectivity, 
+            String weight, String launchDate, String price) {
+        this.id = id;
+        this.name = name;
+        this.screenSize = screenSize;
+        this.displayTechnology = displayTechnology;
+        this.resolution = resolution;
+        this.refreshRate = refreshRate;
+        this.cpu = cpu;
+        this.gpu = gpu;
+        this.ram = ram;
+        this.storage = storage;
+        this.os = os;
+        this.connectivity = connectivity;
+        this.weight = weight;
+        this.launchDate = launchDate;
+        this.price = price;
+    }
+
+    
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getScreenSize() {
+        return screenSize;
+    }
+
+    public void setScreenSize(String screenSize) {
+        this.screenSize = screenSize;
+    }
+
+    public String getDisplayTechnology() {
+        return displayTechnology;
+    }
+
+    public void setDisplayTechnology(String displayTechnology) {
+        this.displayTechnology = displayTechnology;
+    }
+
+    public String getResolution() {
+        return resolution;
+    }
+
+    public void setResolution(String resolution) {
+        this.resolution = resolution;
+    }
+
+    public String getRefreshRate() {
+        return refreshRate;
+    }
+
+    public void setRefreshRate(String refreshRate) {
+        this.refreshRate = refreshRate;
+    }
+    
+    public String getCpu() {
+        return cpu;
+    }
+
+    public void setCpu(String cpu) {
+        this.cpu = cpu;
+    }
+
+    public String getGpu() {
+        return gpu;
+    }
+
+    public void setGpu(String gpu) {
+        this.gpu = gpu;
+    }
+
+    public String getRam() {
+        return ram;
+    }
+
+    public void setRam(String ram) {
+        this.ram = ram;
+    }
+
+    public String getStorage() {
+        return storage;
+    }
+
+    public void setStorage(String storage) {
+        this.storage = storage;
+    }
+
+    public String getOs() {
+        return os;
+    }
+
+    public void setOs(String os) {
+        this.os = os;
+    }
+
+    public String getConnectivity() {
+        return connectivity;
+    }
+
+    public void setConnectivity(String connectivity) {
+        this.connectivity = connectivity;
+    }
+
+    public String getWeight() {
+        return weight;
+    }
+
+    public void setWeight(String weight) {
+        this.weight = weight;
+    }
+
+    public String getLaunchDate() {
+        return launchDate;
+    }
+
+    public void setLaunchDate(String launchDate) {
+        this.launchDate = launchDate;
+    }
+
+    public String getPrice() {
+        return price;
+    }
+
+    public void setPrice(String price) {
+        this.price = price;
+    }
+
+    @Override
+    public String toString() {
+        return "Model{" + "id=" + id + ", name=" + name + ", screenSize=" + screenSize + ", displayTechnology=" + displayTechnology + ", resolution=" + resolution + ", refreshRate=" + refreshRate + ", cpu=" + cpu + ", gpu=" + gpu + ", ram=" + ram + ", storage=" + storage + ", os=" + os + ", connectivity=" + connectivity + ", weight=" + weight + ", launchDate=" + launchDate + ", price=" + price + '}';
+    }
+    
+    public void showBasicInfo() {
+    }
+}
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package OfficialVersion;
+
+
+/**
+ *
+ * @author FOTZS41
+ */
+public class Iphone extends Model{
+    
+    // camera
+    private String rearCamera;
+    private String frontCamera;
+    private String charging;
+    private String port;
+    private String waterResistance;
+    private String dimensions;
+    private String displayType;
+
+    public Iphone() {
+    }
+
+    public Iphone(String rearCamera, String frontCamera, String charging, String port, String waterResistance, 
+            String dimensions, String displayType, String id, String name, String screenSize, String displayTechnology, 
+            String resolution, String refreshRate, String cpu, String gpu, String ram, String storage, String os, String connectivity, 
+            String weight, String launchDate, String price) {
+        super(id, name, screenSize, displayTechnology, resolution, refreshRate, cpu, gpu, ram, storage, os, connectivity, weight, launchDate, price);
+        this.rearCamera = rearCamera;
+        this.frontCamera = frontCamera;
+        this.charging = charging;
+        this.port = port;
+        this.waterResistance = waterResistance;
+        this.dimensions = dimensions;
+        this.displayType = displayType;
+    }
+
+    public String getRearCamera() {
+        return rearCamera;
+    }
+
+    public void setRearCamera(String rearCamera) {
+        this.rearCamera = rearCamera;
+    }
+
+    public String getFrontCamera() {
+        return frontCamera;
+    }
+
+    public void setFrontCamera(String frontCamera) {
+        this.frontCamera = frontCamera;
+    }
+
+    public String getCharging() {
+        return charging;
+    }
+
+    public void setCharging(String charging) {
+        this.charging = charging;
+    }
+
+    public String getPort() {
+        return port;
+    }
+
+    public void setPort(String port) {
+        this.port = port;
+    }
+
+    public String getWaterResistance() {
+        return waterResistance;
+    }
+
+    public void setWaterResistance(String waterResistance) {
+        this.waterResistance = waterResistance;
+    }
+
+    public String getDimensions() {
+        return dimensions;
+    }
+
+    public void setDimensions(String dimensions) {
+        this.dimensions = dimensions;
+    }
+
+    public String getDisplayType() {
+        return displayType;
+    }
+
+    public void setDisplayType(String displayType) {
+        this.displayType = displayType;
+    }
+    
+    
+    @Override
+    public String toString() {
+        super.toString();
+        return "Iphone{" + "rearCamera=" + rearCamera + ", frontCamera=" + frontCamera + ", charging=" + charging + ", port=" + port + ", waterResistance=" + waterResistance + ", dimensions=" + dimensions + ", displayType=" + displayType + '}';
+    }
+    
+    @Override
+    public void showBasicInfo() {
+        super.showBasicInfo();
+        System.out.println("========== " + getName() + " ==========\n");
+        System.out.println("Screen Size: " + getScreenSize());
+        System.out.println("Display Technology: " + getDisplayTechnology());
+        System.out.println("Resolution: " + getResolution());
+        System.out.println("Refresh Rate: " + getRefreshRate());
+        System.out.println("Display Type: " + getDisplayType() + "\n");
+        System.out.println("Rear Camera: " + getRearCamera());
+        System.out.println("Front Camera: " + getFrontCamera() + "\n");
+        System.out.println("Chipset: "+ getCpu());
+        System.out.println("GPU: " + getGpu());
+        System.out.println("Internal Storage: " + getStorage());
+        System.out.println("Operating System: " + getOs() + "\n");
+        System.out.println("Dimensions: " + getDimensions());
+        System.out.println("Weight: " + getWeight() + "\n");
+        System.out.println("Charging: " + getCharging());
+        System.out.println("Port: " + getPort());
+        System.out.println("Water Resistance: " + getWaterResistance());
+        System.out.println("Connectivity: " + getConnectivity() + "\n");
+        System.out.println("Launch Date: " + getLaunchDate() + "\n");
+        System.out.println("Price: " + getPrice() + "\n\n");
+    }
+}
+
+
+Ok mình nói thẳng luôn:
+
+Class của bạn không sai, nhưng đang có 2 vấn đề lớn:
+
+❌ Constructor quá dài (22 tham số) → rất khó bảo trì
+
+❌ toString() của Iphone đang bỏ mất phần Model
+
+🔥 VẤN ĐỀ 1: Constructor quá dài
+Hiện tại:
+
+public Iphone(String rearCamera, String frontCamera, ... , String price)
+22 tham số → rất dễ truyền sai thứ tự 😵
+
+✅ Cách làm chuyên nghiệp: Constructor theo object cha
+Thay vì truyền toàn bộ field của cha vào Iphone constructor,
+hãy truyền Model object vào.
+
+✨ Bước 1: Sửa constructor Iphone
+public Iphone(Model model,
+              String rearCamera,
+              String frontCamera,
+              String charging,
+              String port,
+              String waterResistance,
+              String dimensions,
+              String displayType) {
+
+    super(model.getId(), model.getName(), model.getScreenSize(),
+          model.getDisplayTechnology(), model.getResolution(),
+          model.getRefreshRate(), model.getCpu(), model.getGpu(),
+          model.getRam(), model.getStorage(), model.getOs(),
+          model.getConnectivity(), model.getWeight(),
+          model.getLaunchDate(), model.getPrice());
+
+    this.rearCamera = rearCamera;
+    this.frontCamera = frontCamera;
+    this.charging = charging;
+    this.port = port;
+    this.waterResistance = waterResistance;
+    this.dimensions = dimensions;
+    this.displayType = displayType;
+}
+✨ Khi tạo Iphone:
+Model base = new Model(id, name, screenSize, displayTechnology,
+        resolution, refreshRate, cpu, gpu, ram, storage,
+        os, connectivity, weight, launchDate, price);
+
+Iphone iphone = new Iphone(base,
+        rearCam, frontCam, charging, port,
+        waterRes, dimen, displayType);
+👉 Code rõ ràng hơn rất nhiều
+👉 Không sợ sai thứ tự tham số
+
+🔥 VẤN ĐỀ 2: toString() đang sai
+Hiện tại bạn viết:
+
+@Override
+public String toString() {
+    super.toString();
+    return "Iphone{...}";
+}
+super.toString(); đang bị bỏ đi ❌
+Vì bạn không dùng giá trị trả về.
+
+✅ Sửa đúng cách:
+@Override
+public String toString() {
+    return super.toString() +
+            ", rearCamera=" + rearCamera +
+            ", frontCamera=" + frontCamera +
+            ", charging=" + charging +
+            ", port=" + port +
+            ", waterResistance=" + waterResistance +
+            ", dimensions=" + dimensions +
+            ", displayType=" + displayType;
+}
+🔥 VẤN ĐỀ 3: showBasicInfo() của Model đang trống
+Hiện tại:
+
+public void showBasicInfo() {
+}
+Bạn override trong Iphone nhưng gọi:
+
+super.showBasicInfo();
+→ Thực tế không làm gì cả.
+
+✅ Nên làm thế này
+Trong Model:
+public void showBasicInfo() {
+    System.out.println("ID: " + id);
+    System.out.println("Name: " + name);
+    System.out.println("Price: " + price);
+}
+Rồi Iphone override thêm phần riêng.
+
+🚀 Nếu bạn muốn clean hơn nữa (Pro Level)
+Với số lượng field nhiều như vậy, bạn nên học:
+
+✅ Builder Pattern
+Ví dụ:
+
+Iphone iphone = new Iphone.Builder()
+        .setId("IP15")
+        .setName("iPhone 15 Pro")
+        .setCpu("A17 Pro")
+        .setRearCamera("48MP")
+        .build();
+Không cần constructor 22 tham số nữa.
+
+🎯 Tóm lại cho project của bạn
+Hiện tại project bạn giống mô hình:
+
+Model (cha)
+   ↑
+Iphone
+   ↑
+Có thể sau này thêm Samsung, Xiaomi...
+👉 Bạn đang đi đúng hướng OOP rồi
+👉 Chỉ cần:
+
+Giảm constructor dài
+
+Fix toString
+
+Cho Model in basic info thật sự
+
+Nếu bạn muốn mình refactor toàn bộ class của bạn thành phiên bản "đi thi Java OOP được 9–10 điểm",
+mình làm cho bạn luôn 👌
+
+
+tại vì đang đọc file nên tôi cần showInfo trống để ép kiểu sang iphone rồi dùng khi truy cập list
+
+À ok 👌 mình hiểu ý bạn rồi.
+
+Bạn đang:
+
+Đọc dữ liệu từ file
+
+Lưu vào List<Model>
+
+Khi duyệt list thì ép kiểu sang Iphone
+
+Và muốn showBasicInfo() ở Model để trống
+
+👉 Cách làm này không sai, nhưng bạn đang dùng sai sức mạnh của OOP một chút.
+
+🎯 Vấn đề hiện tại của bạn
+Bạn đang làm kiểu này đúng không:
+
+for (Model m : list) {
+    if (m instanceof Iphone) {
+        Iphone ip = (Iphone) m;
+        ip.showBasicInfo();
+    }
+}
+Vì Model.showBasicInfo() trống nên bạn buộc phải ép kiểu.
+
+🔥 Cách đúng OOP: Dùng Polymorphism (KHÔNG CẦN ÉP KIỂU)
+Thay vì để showBasicInfo() trống,
+hãy biến nó thành abstract method.
+
+✅ Sửa Model thành abstract class
+public abstract class Model {
+Và:
+
+public abstract void showBasicInfo();
+Trong Iphone
+@Override
+public void showBasicInfo() {
+    // in thông tin iphone
+}
+Bây giờ bạn chỉ cần:
+for (Model m : list) {
+    m.showBasicInfo();  // KHÔNG cần ép kiểu
+}
+🔥 Đây mới là đúng OOP.
+
+❗ Tại sao cách này tốt hơn?
+Vì:
+
+Bạn đang dùng đa hình (polymorphism)
+
+Không cần instanceof
+
+Không cần cast
+
+Dễ mở rộng (sau này thêm Samsung, Xiaomi…)
+
+🧠 Khi nào mới cần ép kiểu?
+Chỉ khi bạn muốn gọi method riêng của Iphone mà Model không có.
+
+Ví dụ:
+
+ip.someIphoneOnlyMethod();
+Còn nếu chỉ để in thông tin → polymorphism xử lý rồi.
+
+⚠ Nếu bạn bắt buộc phải để showBasicInfo trống
+Thì ít nhất nên làm thế này:
+
+public void showBasicInfo() {
+    throw new UnsupportedOperationException("Must override in subclass");
+}
+Để tránh quên override.
+
+🚀 Kết luận cho project của bạn
+Bạn đang làm đúng hướng:
+
+Lưu chung vào List<Model> ✅
+
+Có class cha con rõ ràng ✅
+
+Nhưng nên:
+
+👉 Dùng abstract method
+👉 Dùng polymorphism
+👉 Bỏ ép kiểu
+
+Nếu bạn muốn mình vẽ cho bạn sơ đồ đúng chuẩn cho project quản lý sản phẩm (đọc file + list + menu CRUD), mình build khung chuẩn cho bạn luôn.
+
+
+tại vì code có mac nữa thì dùng cách trên ổn không
+
+👉 Câu trả lời ngắn gọn: Ổn hoàn toàn. Và đó mới là cách đúng.
+
+Nếu bạn có:
+
+Model (abstract)
+   ↑
+Iphone
+   ↑
+Mac
+Thì dùng abstract showBasicInfo() là chuẩn OOP nhất, không cần ép kiểu.
+
+✅ Cấu trúc đúng cho cả Iphone + Mac
+1️⃣ Model
+public abstract class Model {
+
+    private String id;
+    private String name;
+    private String price;
+
+    // constructor + getter setter
+
+    public abstract void showBasicInfo();
+}
+2️⃣ Iphone
+@Override
+public void showBasicInfo() {
+    System.out.println("=== IPHONE ===");
+    System.out.println("Name: " + getName());
+    System.out.println("Price: " + getPrice());
+    System.out.println("Rear Camera: " + rearCamera);
+}
+3️⃣ Mac
+@Override
+public void showBasicInfo() {
+    System.out.println("=== MAC ===");
+    System.out.println("Name: " + getName());
+    System.out.println("Price: " + getPrice());
+    System.out.println("CPU: " + getCpu());
+}
+🔥 Khi duyệt list
+Giả sử bạn đọc file và lưu:
+
+List<Model> list = new ArrayList<>();
+Trong list có cả Iphone và Mac.
+
+Bạn chỉ cần:
+
+for (Model m : list) {
+    m.showBasicInfo();
+}
+⚡ Java sẽ tự động gọi đúng method của:
+
+Iphone nếu object là Iphone
+
+Mac nếu object là Mac
+
+Đây gọi là Runtime Polymorphism.
+
+❌ Không nên làm kiểu này nữa
+if (m instanceof Iphone) {
+    ((Iphone) m).showBasicInfo();
+}
+Vì:
+
+Code xấu
+
+Khó mở rộng
+
+Sau này thêm Samsung lại phải thêm if
+
+🧠 Quan trọng khi đọc file
+Khi đọc file, bạn chỉ cần:
+
+if (type.equals("iphone")) {
+    list.add(new Iphone(...));
+} else if (type.equals("mac")) {
+    list.add(new Mac(...));
+}
+Sau đó không cần quan tâm nữa.
+List chứa object đúng loại rồi.
+
+🎯 Kết luận cho project của bạn
+Có Mac nữa → dùng abstract method càng đúng hơn.
+
+Bạn đang đi đúng hướng rồi 👍
+Chỉ cần bỏ ép kiểu là project của bạn sẽ “đúng chất OOP”.
+
+Nếu bạn muốn mình review kiến trúc project hiện tại (file đọc, list, menu, CRUD) để tối ưu cho gọn + dễ mở rộng, gửi mình cấu trúc file main luôn.
+
+
+tôi có menu opt 1 là in ra list iphone còn 2 là mac thì làm sao để nó biết in ra khi dùng đa hình
+
+Ok câu này hay 👌 đây là chỗ nhiều người nhầm khi dùng đa hình.
+
+Bạn có:
+
+List<Model> list
+
+Trong đó có cả Iphone và Mac
+
+Menu:
+
+1 → in Iphone
+
+2 → in Mac
+
+Và bạn hỏi: dùng polymorphism thì làm sao nó biết in cái nào?
+
+🎯 Câu trả lời: Polymorphism không tự lọc loại
+Đa hình giúp bạn gọi đúng method của object
+Nhưng nó không tự lọc loại object cho bạn.
+
+Bạn vẫn phải lọc theo type.
+
+✅ Cách chuẩn nhất: dùng instanceof
+Ví dụ:
+
+public static void showIphoneList(List<Model> list) {
+    for (Model m : list) {
+        if (m instanceof Iphone) {
+            m.showBasicInfo();
+        }
+    }
+}
+Mac:
+
+public static void showMacList(List<Model> list) {
+    for (Model m : list) {
+        if (m instanceof Mac) {
+            m.showBasicInfo();
+        }
+    }
+}
+🔥 Quan trọng:
+
+Bạn không cần ép kiểu nữa,
+vì showBasicInfo() đã là abstract method trong Model.
+
+🧠 Luồng hoạt động
+Menu:
+
+switch(choice) {
+    case 1:
+        showIphoneList(list);
+        break;
+    case 2:
+        showMacList(list);
+        break;
+}
+Java sẽ:
+
+Lọc đúng loại bằng instanceof
+
+Gọi đúng method override nhờ polymorphism
+
+🚀 Cách chuyên nghiệp hơn (đẹp hơn)
+Thêm 1 method trong Model:
+
+public abstract String getType();
+Trong Iphone:
+
+@Override
+public String getType() {
+    return "iphone";
+}
+Trong Mac:
+
+@Override
+public String getType() {
+    return "mac";
+}
+Sau đó lọc bằng:
+
+for (Model m : list) {
+    if (m.getType().equalsIgnoreCase("iphone")) {
+        m.showBasicInfo();
+    }
+}
+👉 Cách này đẹp hơn instanceof
+👉 Sau này thêm Samsung không cần sửa logic nhiều
+
+🏆 Cách cao cấp nhất (nếu muốn chuyên nghiệp)
+Tách thành 2 list:
+
+List<Iphone> iphoneList
+List<Mac> macList
+Nhưng nếu đề bài yêu cầu lưu chung → giữ List<Model> là đúng.
+
+🎯 Kết luận
+Đa hình giúp:
+
+Gọi đúng method
+
+Nhưng bạn vẫn phải:
+
+Lọc loại bằng instanceof hoặc getType()
+
+Nếu bạn muốn mình chỉ cho cách làm menu CRUD chuẩn như bài thi Java OOP (đọc file + filter + update + search) mình viết khung chuẩn cho bạn luôn.
+
+
+các đặc tính của oop
+
+OOP (Object-Oriented Programming) có 4 đặc tính chính 🔥
+Đây là phần gần như chắc chắn xuất hiện trong kiểm tra Java.
+
+1️⃣ Encapsulation (Đóng gói)
+👉 Che giấu dữ liệu, chỉ cho phép truy cập thông qua method.
+
+Ví dụ:
+private String name;
+
+public String getName() {
+    return name;
+}
+
+public void setName(String name) {
+    this.name = name;
+}
+✔ Bảo vệ dữ liệu
+✔ Kiểm soát truy cập
+✔ Tránh sửa bậy từ bên ngoài
+
+2️⃣ Abstraction (Trừu tượng)
+👉 Ẩn chi tiết implementation, chỉ cho người dùng biết cái cần dùng.
+
+Trong Java dùng:
+
+abstract class
+
+interface
+
+Ví dụ:
+public abstract class Model {
+    public abstract void showBasicInfo();
+}
+Người dùng chỉ biết showBasicInfo()
+Không cần biết bên trong in gì.
+
+3️⃣ Inheritance (Kế thừa)
+👉 Class con kế thừa thuộc tính và method từ class cha.
+
+public class Iphone extends Model {
+}
+✔ Tái sử dụng code
+✔ Giảm lặp code
+✔ Tạo quan hệ cha – con
+
+4️⃣ Polymorphism (Đa hình)
+👉 Cùng một method nhưng hành vi khác nhau tùy object.
+
+Model m = new Iphone();
+m.showBasicInfo();  // gọi version của Iphone
+✔ Không cần ép kiểu
+✔ Code linh hoạt
+✔ Dễ mở rộng
+
+📌 Tóm tắt cực ngắn để đi thi
+Đặc tính	Ý nghĩa
+Encapsulation	Ẩn dữ liệu bằng private + getter/setter
+Abstraction	Ẩn chi tiết, dùng abstract/interface
+Inheritance	Kế thừa class cha
+Polymorphism	Cùng method, hành vi khác nhau
+🎯 Ví dụ ngay trong project của bạn
+Encapsulation → private field trong Model
+
+Abstraction → abstract showBasicInfo()
+
+Inheritance → Iphone extends Model
+
+Polymorphism → m.showBasicInfo() gọi đúng Iphone/Mac
+
+Nếu bạn muốn mình giải thích sâu hơn từng cái theo kiểu thi vấn đáp (giảng viên hỏi là trả lời mượt), mình hướng dẫn luôn cho bạn 👌
+
+
+public Iphone(String rearCamera, String frontCamera, String charging, String port, String waterResistance, String dimensions, String displayType, String id, String name, String screenSize, String displayTechnology, String resolution, String refreshRate, String cpu, String gpu, String ram, String storage, String os, String connectivity, String weight, String launchDate, String price) {
+        super(id, name, screenSize, displayTechnology, resolution, refreshRate, cpu, gpu, ram, storage, os, connectivity, weight, launchDate, price);
+        this.rearCamera = rearCamera;
+        this.frontCamera = frontCamera;
+        this.charging = charging;
+        this.port = port;
+        this.waterResistance = waterResistance;
+        this.dimensions = dimensions;
+        this.displayType = displayType;
+    }
+public Mac(String battery, String brightness, String display, String neuralEngine, String id, String name, String screenSize, String displayTechnology, String resolution, String refreshRate, String cpu, String gpu, String ram, String storage, String os, String connectivity, String weight, String launchDate, String price) {
+        super(id, name, screenSize, displayTechnology, resolution, refreshRate, cpu, gpu, ram, storage, os, connectivity, weight, launchDate, price);
+        this.battery = battery;
+        this.brightness = brightness;
+        this.display = display;
+        this.neuralEngine = neuralEngine;
+    }
+tạo 2 method tạo obj của 2 class này theo kiểu inputString
+
+Ok 👍 mình sẽ tạo cho bạn 2 method:
+
+createIphone()
+
+createMac()
+
+Theo kiểu dùng inputString() để nhập từ bàn phím, và giữ đúng thứ tự constructor hiện tại của bạn.
+
+✅ Giả sử bạn đã có hàm input
+static Scanner sc = new Scanner(System.in);
+
+public static String inputString(String message) {
+    System.out.print(message);
+    return sc.nextLine();
+}
+🔥 1️⃣ Method tạo Iphone
+public static Iphone createIphone() {
+
+    // ===== Iphone riêng =====
+    String rearCamera = inputString("Rear Camera: ");
+    String frontCamera = inputString("Front Camera: ");
+    String charging = inputString("Charging: ");
+    String port = inputString("Port: ");
+    String waterResistance = inputString("Water Resistance: ");
+    String dimensions = inputString("Dimensions: ");
+    String displayType = inputString("Display Type: ");
+
+    // ===== Model chung =====
+    String id = inputString("ID: ");
+    String name = inputString("Name: ");
+    String screenSize = inputString("Screen Size: ");
+    String displayTechnology = inputString("Display Technology: ");
+    String resolution = inputString("Resolution: ");
+    String refreshRate = inputString("Refresh Rate: ");
+    String cpu = inputString("CPU: ");
+    String gpu = inputString("GPU: ");
+    String ram = inputString("RAM: ");
+    String storage = inputString("Storage: ");
+    String os = inputString("Operating System: ");
+    String connectivity = inputString("Connectivity: ");
+    String weight = inputString("Weight: ");
+    String launchDate = inputString("Launch Date: ");
+    String price = inputString("Price: ");
+
+    return new Iphone(
+            rearCamera, frontCamera, charging, port,
+            waterResistance, dimensions, displayType,
+            id, name, screenSize, displayTechnology,
+            resolution, refreshRate, cpu, gpu,
+            ram, storage, os, connectivity,
+            weight, launchDate, price
+    );
+}
+🔥 2️⃣ Method tạo Mac
+public static Mac createMac() {
+
+    // ===== Mac riêng =====
+    String battery = inputString("Battery: ");
+    String brightness = inputString("Brightness: ");
+    String display = inputString("Display: ");
+    String neuralEngine = inputString("Neural Engine: ");
+
+    // ===== Model chung =====
+    String id = inputString("ID: ");
+    String name = inputString("Name: ");
+    String screenSize = inputString("Screen Size: ");
+    String displayTechnology = inputString("Display Technology: ");
+    String resolution = inputString("Resolution: ");
+    String refreshRate = inputString("Refresh Rate: ");
+    String cpu = inputString("CPU: ");
+    String gpu = inputString("GPU: ");
+    String ram = inputString("RAM: ");
+    String storage = inputString("Storage: ");
+    String os = inputString("Operating System: ");
+    String connectivity = inputString("Connectivity: ");
+    String weight = inputString("Weight: ");
+    String launchDate = inputString("Launch Date: ");
+    String price = inputString("Price: ");
+
+    return new Mac(
+            battery, brightness, display, neuralEngine,
+            id, name, screenSize, displayTechnology,
+            resolution, refreshRate, cpu, gpu,
+            ram, storage, os, connectivity,
+            weight, launchDate, price
+    );
+}
+🚀 Dùng trong menu
+case 1:
+    list.add(createIphone());
+    break;
+
+case 2:
+    list.add(createMac());
+    break;
+🔥 CẢNH BÁO (Quan trọng)
+Constructor của bạn quá dài (19–22 tham số).
+Rất dễ truyền sai thứ tự.
+
+Nếu đi thi hoặc làm project lớn, giảng viên sẽ trừ điểm vì constructor kiểu này khó bảo trì.
+
+Nếu bạn muốn mình viết lại version gọn hơn (dùng Model object truyền vào cho sạch), mình refactor cho bạn bản đẹp hơn ngay.
+
+
+trong hệ thống thật thì constructor sẽ thiết kế thế nào? tôi đang thiết kế theo kiểu đọc file dữ liệu
+
+Câu hỏi này rất đúng mindset của người làm hệ thống 👌
+
+Trong hệ thống thật, người ta không thiết kế constructor 20 tham số như bạn đang làm.
+
+Vì:
+
+❌ Dễ truyền sai thứ tự
+
+❌ Khó bảo trì
+
+❌ Khó đọc
+
+❌ Không mở rộng được
+
+🎯 Trong hệ thống thật người ta làm theo 1 trong 4 cách sau
+✅ Cách 1: Constructor tối thiểu (Chỉ bắt buộc)
+Chỉ truyền những field bắt buộc nhất:
+
+public Model(String id, String name) {
+    this.id = id;
+    this.name = name;
+}
+Các field còn lại dùng setter:
+
+Model m = new Model(id, name);
+m.setCpu(cpu);
+m.setRam(ram);
+👉 Dùng nhiều trong CRUD system.
+
+✅ Cách 2: Builder Pattern (Phổ biến nhất trong hệ thống lớn)
+Đây là cách chuyên nghiệp nhất.
+
+Iphone iphone = new Iphone.Builder()
+        .id("IP15")
+        .name("iPhone 15 Pro")
+        .cpu("A17 Pro")
+        .rearCamera("48MP")
+        .price("30 triệu")
+        .build();
+Ưu điểm:
+
+Không quan tâm thứ tự
+
+Dễ đọc
+
+Không bị constructor dài
+
+An toàn khi mở rộng field
+
+🔥 Đây là cách mà Spring Boot, Hibernate, hệ thống lớn thường dùng.
+
+✅ Cách 3: Dùng DTO khi đọc file / đọc DB
+Trong hệ thống thật, người ta tách:
+
+Entity (Model)
+
+DTO (Data Transfer Object)
+
+Ví dụ:
+
+public class IphoneDTO {
+    public String id;
+    public String name;
+    public String cpu;
+    public String rearCamera;
+}
+Khi đọc file:
+
+IphoneDTO dto = readFromFile();
+Iphone iphone = mapToEntity(dto);
+👉 Không nhét tất cả logic vào constructor.
+
+✅ Cách 4: Factory Pattern (Rất hợp với trường hợp của bạn)
+Vì bạn đang đọc file và có nhiều loại:
+
+iphone
+
+mac
+
+Trong hệ thống thật người ta sẽ làm:
+
+public class ModelFactory {
+
+    public static Model create(String type, String[] data) {
+        if (type.equalsIgnoreCase("iphone")) {
+            return new Iphone(...);
+        }
+        if (type.equalsIgnoreCase("mac")) {
+            return new Mac(...);
+        }
+        return null;
+    }
+}
+Trong main:
+
+Model m = ModelFactory.create(type, data);
+list.add(m);
+👉 Tách logic tạo object ra khỏi main.
+
+🎯 Nếu là hệ thống đọc file thật sự
+Người ta sẽ:
+
+Đọc file → parse thành object DTO
+
+Dùng Factory để tạo đúng subclass
+
+Lưu vào List<Model>
+
+Không dùng constructor dài 20 tham số
+
+🧠 Thiết kế của bạn hiện tại đang ở mức
+✔ Đúng OOP cơ bản
+❌ Nhưng constructor quá dài
+❌ Chưa tách trách nhiệm tạo object
+
+🚀 Nếu là mình thiết kế project của bạn
+Mình sẽ làm:
+
+Model (abstract)
+Iphone extends Model
+Mac extends Model
+ModelFactory
+FileService
+MenuService
+Constructor của Model chỉ giữ field quan trọng.
+Còn lại dùng setter hoặc Builder.
+
+📌 Lời khuyên thật
+Vì bạn đang làm bài đọc file dữ liệu:
+
+👉 Dùng Factory Pattern là hợp lý nhất
+👉 Không cần Builder nếu đây chỉ là bài tập
+
+Nếu bạn gửi mình format file bạn đang đọc (ví dụ: iphone;id;name;cpu;...)
+Mình sẽ thiết kế lại cho bạn cấu trúc đúng kiểu hệ thống thật luôn.
+
+
+
+Iphone iphone \= new Iphone.Builder() .id("IP15") .name("iPhone 15 Pro") .cpu("A17 Pro") .rearCamera("48MP") .price("30 triệu") .build();
+
+gảii thích
+
+Ok 👍 mình sẽ giải thích kỹ Builder Pattern cho bạn theo đúng ví dụ này:
+
+Iphone iphone = new Iphone.Builder()
+        .id("IP15")
+        .name("iPhone 15 Pro")
+        .cpu("A17 Pro")
+        .rearCamera("48MP")
+        .price("30 triệu")
+        .build();
+🎯 Builder Pattern là gì?
+Builder là cách tạo object không cần constructor dài 20 tham số.
+
+Thay vì:
+
+new Iphone(a, b, c, d, e, f, g, h, i, j, k, l, m, n...)
+Ta dùng:
+
+new Iphone.Builder()
+    .id(...)
+    .name(...)
+    .cpu(...)
+    .build();
+👉 Không quan tâm thứ tự
+👉 Rất dễ đọc
+👉 Rất an toàn
+
+🔥 Nó hoạt động thế nào?
+Ta tạo một class Builder bên trong Iphone.
+
+✅ Ví dụ đơn giản cho Iphone của bạn
+public class Iphone extends Model {
+
+    private String rearCamera;
+    private String frontCamera;
+    private String charging;
+
+    private Iphone(Builder builder) {
+        super(builder.id, builder.name, builder.screenSize,
+              builder.displayTechnology, builder.resolution,
+              builder.refreshRate, builder.cpu, builder.gpu,
+              builder.ram, builder.storage, builder.os,
+              builder.connectivity, builder.weight,
+              builder.launchDate, builder.price);
+
+        this.rearCamera = builder.rearCamera;
+        this.frontCamera = builder.frontCamera;
+        this.charging = builder.charging;
+    }
+✅ Class Builder bên trong
+    public static class Builder {
+
+        // field của Model
+        private String id;
+        private String name;
+        private String screenSize;
+        private String displayTechnology;
+        private String resolution;
+        private String refreshRate;
+        private String cpu;
+        private String gpu;
+        private String ram;
+        private String storage;
+        private String os;
+        private String connectivity;
+        private String weight;
+        private String launchDate;
+        private String price;
+
+        // field riêng của Iphone
+        private String rearCamera;
+        private String frontCamera;
+        private String charging;
+
+        public Builder id(String id) {
+            this.id = id;
+            return this;
+        }
+
+        public Builder name(String name) {
+            this.name = name;
+            return this;
+        }
+
+        public Builder cpu(String cpu) {
+            this.cpu = cpu;
+            return this;
+        }
+
+        public Builder rearCamera(String rearCamera) {
+            this.rearCamera = rearCamera;
+            return this;
+        }
+
+        public Builder price(String price) {
+            this.price = price;
+            return this;
+        }
+
+        public Iphone build() {
+            return new Iphone(this);
+        }
+    }
+}
+🔎 Tại sao phải return this?
+Ví dụ:
+
+.id("IP15")
+.name("iPhone 15 Pro")
+Mỗi method trả về chính object Builder
+→ Cho phép chain tiếp method khác
+
+Đây gọi là method chaining.
+
+🧠 Luồng chạy thực tế
+Khi bạn viết:
+
+new Iphone.Builder()
+    .id("IP15")
+    .name("iPhone 15 Pro")
+    .build();
+Java sẽ:
+
+Tạo Builder object
+
+Gán id
+
+Gán name
+
+Khi gọi build() → tạo Iphone thật
+
+🎯 Tại sao hệ thống thật thích dùng Builder?
+Vì:
+
+Constructor dài	Builder
+Dễ sai thứ tự	Không phụ thuộc thứ tự
+Khó đọc	Rất dễ đọc
+Khó mở rộng	Thêm field không ảnh hưởng code cũ
+🚀 Trong trường hợp đọc file của bạn
+Builder cực hợp lý:
+
+Iphone iphone = new Iphone.Builder()
+        .id(data[1])
+        .name(data[2])
+        .cpu(data[3])
+        .rearCamera(data[4])
+        .build();
+Không lo truyền sai thứ tự.
+
+📌 Khi nào nên dùng Builder?
+✔ Class có nhiều field (>6 field)
+✔ Có field optional
+✔ Constructor quá dài
+✔ Hệ thống lớn
+
+⚠ Khi nào KHÔNG cần?
+❌ Class chỉ có 2–3 field
+❌ Bài tập nhỏ đơn giản
+
+🏆 Kết luận cho bạn
+Với số field trong Model của bạn (15+)
+👉 Builder là cách chuyên nghiệp nhất.
+
+Nếu bạn muốn mình viết full Builder cho đúng Model + Iphone + Mac theo project của bạn, mình làm bản chuẩn luôn.
+
+
+hệ thống thật thì dữ liệu file của họ sẽ thiết kế như nào để code dễ đọc
+
+Câu hỏi này rất “đúng chất system design” 👌
+Trong hệ thống thật, người ta không thiết kế file theo kiểu “nhét 20 field theo thứ tự” như bài tập.
+
+Vì:
+
+❌ Phụ thuộc thứ tự cột
+
+❌ Thêm field là vỡ format
+
+❌ Khó đọc, khó debug
+
+❌ Dễ parse sai
+
+🎯 Trong hệ thống thật họ dùng 3 kiểu chính
+✅ 1️⃣ JSON (Phổ biến nhất)
+Đây là cách phổ biến nhất hiện nay.
+
+Ví dụ file:
+
+{
+  "type": "iphone",
+  "id": "IP15",
+  "name": "iPhone 15 Pro",
+  "screenSize": "6.1",
+  "cpu": "A17 Pro",
+  "rearCamera": "48MP",
+  "price": "30000000"
+}
+Mac:
+
+{
+  "type": "mac",
+  "id": "MACM3",
+  "name": "MacBook Pro M3",
+  "cpu": "M3",
+  "battery": "22 hours",
+  "price": "45000000"
+}
+🔥 Tại sao JSON tốt?
+✔ Không phụ thuộc thứ tự
+✔ Có key rõ ràng
+✔ Thêm field không ảnh hưởng code cũ
+✔ Rất dễ đọc
+
+Trong Java thật người ta dùng thư viện:
+
+Jackson
+
+Gson
+
+✅ 2️⃣ CSV có header (nếu cần đơn giản)
+Ví dụ:
+
+type,id,name,cpu,ram,storage,rearCamera,battery,price
+iphone,IP15,iPhone 15,A17,8GB,256GB,48MP,,30000000
+mac,MACM3,MacBook Pro,M3,16GB,512GB,,22h,45000000
+🔥 Có header → không phụ thuộc vị trí.
+
+Trong code:
+
+Map<String, String> row = parseCSVLine(line);
+String cpu = row.get("cpu");
+👉 Không cần nhớ index 5 hay 7.
+
+❌ Cách bài tập thường làm (không tốt cho system thật)
+iphone;IP15;iPhone 15;6.1;OLED;2532x1170;120Hz;A17;...
+Nhược điểm:
+
+Phải nhớ thứ tự
+
+Thêm 1 field là hỏng format
+
+Rất khó bảo trì
+
+🏗 Trong hệ thống lớn họ làm thế này
+1️⃣ File → DTO
+class IphoneDTO {
+    String id;
+    String name;
+    String cpu;
+    String rearCamera;
+}
+2️⃣ DTO → Entity (Model)
+Iphone iphone = mapper(dto);
+3️⃣ Lưu vào database
+Hệ thống thật gần như không dùng file để lưu dữ liệu chính.
+File chỉ dùng:
+
+Import dữ liệu
+
+Backup
+
+Config
+
+Dữ liệu chính → Database.
+
+🎯 Nếu là project của bạn
+Vì bạn có nhiều field, mình khuyên:
+
+Nếu vẫn dùng file → dùng JSON
+Ví dụ 1 file:
+
+[
+  {
+    "type": "iphone",
+    "id": "IP15",
+    "name": "iPhone 15 Pro",
+    "cpu": "A17 Pro",
+    "rearCamera": "48MP"
+  },
+  {
+    "type": "mac",
+    "id": "MACM3",
+    "name": "MacBook Pro",
+    "cpu": "M3",
+    "battery": "22h"
+  }
+]
+Sau đó dùng Factory:
+
+if (node.get("type").equals("iphone")) {
+    return new Iphone(...);
+}
+🧠 Nguyên tắc thiết kế file trong hệ thống thật
+Không phụ thuộc thứ tự
+
+Có key rõ ràng
+
+Dễ thêm field
+
+Dễ đọc bằng người
+
+Không làm constructor phụ thuộc format
+
+📌 Tóm lại
+Bài tập	Hệ thống thật
+; phân cách	JSON
+Thứ tự cố định	Key-value
+Constructor dài	Builder / Mapper
+Lưu file	Lưu DB
+Nếu bạn cho mình biết:
+
+Bạn đang dùng txt hay csv?
+
+Format file hiện tại thế nào?
+
+Mình sẽ thiết kế lại format chuẩn, dễ code và đúng kiểu system thực tế cho bạn.
+
+
+Json là gì
+
+JSON là gì?
+JSON (JavaScript Object Notation) là một định dạng dữ liệu dạng text (chuỗi ký tự) dùng để lưu trữ và trao đổi dữ liệu giữa các hệ thống.
+
+Nói đơn giản:
+
+👉 JSON là cách ghi dữ liệu theo dạng key – value
+👉 Rất dễ đọc cho cả người và máy
+
+🔎 Ví dụ JSON đơn giản
+{
+  "id": "IP15",
+  "name": "iPhone 15 Pro",
+  "cpu": "A17 Pro",
+  "price": 30000000
+}
+Ở đây:
+
+"id" là key
+
+"IP15" là value
+
+🧱 Cấu trúc cơ bản của JSON
+1️⃣ Object (cặp key-value)
+Dùng { }
+
+{
+  "name": "MacBook",
+  "ram": "16GB"
+}
+2️⃣ Array (danh sách)
+Dùng [ ]
+
+[
+  { "id": "IP15" },
+  { "id": "MACM3" }
+]
+📦 JSON trong project của bạn
+Thay vì lưu file kiểu:
+
+iphone;IP15;iPhone 15;A17;48MP;30000000
+Bạn có thể lưu:
+
+{
+  "type": "iphone",
+  "id": "IP15",
+  "name": "iPhone 15",
+  "cpu": "A17",
+  "rearCamera": "48MP",
+  "price": 30000000
+}
+👉 Không phụ thuộc thứ tự
+👉 Dễ thêm field
+👉 Không sợ nhầm index
+
+🔥 Tại sao hệ thống thật thích JSON?
+✔ Dễ đọc
+✔ Dễ debug
+✔ Không phụ thuộc thứ tự
+✔ Dùng được với web, mobile, backend
+✔ Chuẩn giao tiếp API
+
+Hầu hết hệ thống hiện đại đều dùng JSON để trao đổi dữ liệu.
+
+🧠 So sánh nhanh
+TXT kiểu ;	JSON
+Phụ thuộc thứ tự	Không phụ thuộc thứ tự
+Khó đọc	Dễ đọc
+Dễ sai index	Dùng key rõ ràng
+Khó mở rộng	Dễ thêm field
+📌 Trong Java đọc JSON thế nào?
+Hệ thống thật dùng thư viện như:
+
+Jackson
+
+Gson
+
+Ví dụ dùng Gson:
+
+Gson gson = new Gson();
+Iphone iphone = gson.fromJson(jsonString, Iphone.class);
+👉 Tự map JSON → object luôn
+👉 Không cần parse thủ công
+
+🎯 Kết luận
+JSON là:
+
+Một định dạng lưu trữ dữ liệu
+
+Dạng key-value
+
+Dùng cực nhiều trong hệ thống thật
+
+Tốt hơn txt phân cách bằng ;
+
+Nếu bạn muốn mình viết demo cách đọc JSON cho project Model + Iphone + Mac của bạn, mình làm ví dụ thực tế luôn cho dễ hiểu.
+
+
+
+if (node.get("type").equals("iphone")) { return new Iphone(...); }
+
+cái này là gì
+
+À 👍 đoạn này:
+
+if (node.get("type").equals("iphone")) {
+    return new Iphone(...);
+}
+Nó là logic phân loại object khi đọc JSON.
+
+🎯 Nó dùng để làm gì?
+Khi bạn đọc JSON, mỗi object sẽ có 1 field "type":
+
+Ví dụ:
+
+{
+  "type": "iphone",
+  "id": "IP15",
+  "name": "iPhone 15 Pro"
+}
+Hoặc:
+
+{
+  "type": "mac",
+  "id": "MACM3",
+  "name": "MacBook Pro"
+}
+🔎 Giải thích từng phần
+node
+node là 1 object JSON đã được đọc vào Java.
+
+Ví dụ:
+
+JsonNode node = ...;
+node.get("type")
+Lấy giá trị của key "type" trong JSON.
+
+Nếu JSON là:
+
+"type": "iphone"
+Thì:
+
+node.get("type")
+→ trả về "iphone"
+
+.equals("iphone")
+Kiểm tra xem nó có phải là iphone không.
+
+🧠 Vậy đoạn code này nghĩa là gì?
+👉 Nếu object trong file có "type": "iphone"
+→ Tạo object Iphone
+
+Nếu "type": "mac"
+→ Tạo object Mac
+
+🔥 Đây gọi là gì trong OOP?
+Đây là Factory Pattern (Mẫu thiết kế Factory).
+
+Ví dụ đầy đủ hơn:
+
+public static Model createModel(JsonNode node) {
+
+    String type = node.get("type").asText();
+
+    if (type.equalsIgnoreCase("iphone")) {
+        return new Iphone(...);
+    }
+
+    if (type.equalsIgnoreCase("mac")) {
+        return new Mac(...);
+    }
+
+    return null;
+}
+🎯 Tại sao cần nó?
+Vì khi đọc file JSON, bạn chỉ biết:
+
+List<Model> list
+Nhưng bạn không biết object đó là Iphone hay Mac.
+
+Nên phải dựa vào "type" để tạo đúng subclass.
+
+📦 Luồng thực tế sẽ là
+1️⃣ Đọc file JSON
+2️⃣ Duyệt từng object
+3️⃣ Kiểm tra "type"
+4️⃣ Tạo đúng class
+5️⃣ Lưu vào List<Model>
+
+Sau đó bạn chỉ cần:
+
+for (Model m : list) {
+    m.showBasicInfo();
+}
+📌 Tóm lại
+Đoạn đó là:
+
+✔ Kiểm tra loại dữ liệu
+✔ Tạo đúng object
+✔ Áp dụng Factory Pattern
+✔ Chuẩn thiết kế hệ thống thật
+
+Nếu bạn muốn mình viết full ví dụ từ JSON file → đọc → tạo Iphone/Mac → lưu vào list cho project của bạn, mình demo hoàn chỉnh luôn cho dễ hiểu.
+
+đa hình là gì
+
+Đa hình (Polymorphism) là một khái niệm quan trọng trong lập trình hướng đối tượng (OOP), cho phép một đối tượng hoặc một phương thức có nhiều cách hoạt động khác nhau tùy vào ngữ cảnh.
+
+🔹 Hiểu đơn giản
+“Đa hình” = nhiều hình dạng
+→ Cùng một tên hàm nhưng hành vi khác nhau
+
+🔹 Ví dụ dễ hiểu
+Giả sử có lớp Animal:
+
+class Animal {
+    void sound() {
+        System.out.println("Animal makes sound");
+    }
+}
+Các lớp con:
+
+class Dog extends Animal {
+    void sound() {
+        System.out.println("Dog barks");
+    }
+}
+
+class Cat extends Animal {
+    void sound() {
+        System.out.println("Cat meows");
+    }
+}
+Sử dụng:
+
+Animal a;
+
+a = new Dog();
+a.sound();   // Dog barks
+
+a = new Cat();
+a.sound();   // Cat meows
+➡️ Cùng gọi sound() nhưng kết quả khác nhau → đó là đa hình
+
+🔹 Có 2 loại đa hình chính
+1. Đa hình tại thời điểm biên dịch (Compile-time)
+👉 Còn gọi là Overloading (nạp chồng phương thức)
+
+void print(int a) {}
+void print(String s) {}
+➡️ Cùng tên print nhưng khác tham số
+
+2. Đa hình tại thời điểm chạy (Runtime)
+👉 Còn gọi là Overriding (ghi đè phương thức)
+
+class A {
+    void show() {}
+}
+
+class B extends A {
+    void show() {}  // override
+}
+➡️ Quyết định gọi hàm nào khi chương trình chạy
+
+🔹 Tại sao cần đa hình?
+Giúp code linh hoạt
+
+Dễ mở rộng
+
+Tái sử dụng code tốt hơn
+
+Giảm phụ thuộc giữa các lớp
+
+🔹 Tóm lại
+Đa hình = 1 tên → nhiều hành vi
+
+Có 2 dạng:
+
+Overloading (biên dịch)
+
+Overriding (chạy)
+
+Nếu bạn muốn, mình có thể:
+
+Cho bài tập đa hình giống đề thi 💯
+
+Hoặc giải thích sâu hơn kiểu “bẫy hay gặp trong Java” 🚀
+
+
+public boolean matchesQuery(String query) {
+        String q = query.toLowerCase();
+        return (name != null && name.toLowerCase().contains(q))
+                || (type != null && type.toLowerCase().contains(q))
+                || (cpu != null && cpu.toLowerCase().contains(q))
+                || (os != null && os.toLowerCase().contains(q));
+    }
+
+Đoạn code của bạn là một hàm tìm kiếm (search/filter) rất điển hình trong Java. Mình giải thích rõ từng phần để bạn nắm chắc nhé:
+
+🔹 Ý nghĩa tổng thể
+public boolean matchesQuery(String query)
+👉 Hàm này dùng để kiểm tra:
+đối tượng hiện tại có “match” (khớp) với từ khóa query hay không
+
+→ Trả về:
+
+true → có chứa từ khóa
+
+false → không chứa
+
+🔹 Phân tích từng dòng
+1. Chuẩn hóa chuỗi tìm kiếm
+String q = query.toLowerCase();
+👉 Chuyển query về chữ thường
+→ để so sánh không phân biệt hoa/thường
+
+2. Điều kiện return
+return (name != null && name.toLowerCase().contains(q))
+👉 Nghĩa là:
+
+Nếu name khác null
+
+Và name có chứa q
+
+→ thì đúng
+
+3. Toàn bộ điều kiện
+return (name != null && name.toLowerCase().contains(q))
+    || (type != null && type.toLowerCase().contains(q))
+    || (cpu != null && cpu.toLowerCase().contains(q))
+    || (os != null && os.toLowerCase().contains(q));
+👉 Hiểu đơn giản:
+
+Chỉ cần 1 trong 4 field chứa từ khóa → trả về true
+
+🔹 Ví dụ
+Giả sử:
+
+name = "Dell Inspiron"
+type = "Laptop"
+cpu = "Intel i5"
+os = "Windows 11"
+Gọi:
+
+matchesQuery("intel")
+→ cpu.contains("intel") đúng
+→ Kết quả: true
+
+🔹 Điểm hay của code này
+✔ Tránh lỗi NullPointerException
+✔ Tìm kiếm linh hoạt (không phân biệt hoa thường)
+✔ Tìm trên nhiều thuộc tính cùng lúc
+
+🔹 Bẫy dễ gặp ⚠️
+1. query bị null
+Nếu gọi:
+
+matchesQuery(null)
+→ lỗi ngay ở:
+
+query.toLowerCase()
+👉 Cách fix:
+
+if (query == null) return false;
+2. Tối ưu code (viết gọn hơn)
+Bạn có thể viết lại:
+
+public boolean matchesQuery(String query) {
+    if (query == null) return false;
+    String q = query.toLowerCase();
+
+    return Stream.of(name, type, cpu, os)
+            .filter(Objects::nonNull)
+            .anyMatch(s -> s.toLowerCase().contains(q));
+}
+👉 Dùng Stream (Java 8) → gọn + chuyên nghiệp hơn
+
+🔹 Liên hệ với đa hình (quan trọng)
+Nếu bạn có nhiều class (Laptop, Phone, Tablet...),
+→ mỗi class có thể override matchesQuery()
+
+👉 Đây chính là đa hình runtime (overriding)
+
+Nếu bạn muốn, mình có thể:
+
+Biến đoạn này thành câu hỏi thi OOP cực hay (có bẫy) 😈
+
+Hoặc viết luôn chương trình tìm kiếm danh sách object hoàn chỉnh 🚀
+
+
+public static void showIphoneList() {
+        System.out.println("\n========== iPhone List ==========");
+        for (Model m : list) {
+            if (m instanceof Iphone) {
+                m.toString();
+            }
+        }
+        System.out.println();
+    }
+
+    public static void showMacList() {
+        System.out.println("\n========== Mac List ==========");
+        for (Model m : list) {
+            if (m instanceof Mac) {
+                m.toString();
+            }
+        }
+        System.out.println();
+    }
+
+    public static void shop() {
+        System.out.println("\n========== All Products ==========");
+        for (Model m : list) {
+            m.toString();
+        }
+        System.out.println();
+    }
+
+    public static void findProductByName() {
+        System.out.print("Enter search (name / type / chipset / OS): ");
+        String query = sc.nextLine().trim();
+        boolean found = false;
+        for (Model m : list) {
+            if (m.matchesQuery(query)) {
+                m.showFullSpecs();
+                found = true;
+            }
+        }
+        if (!found) {
+            System.out.println("No product found for: \"" + query + "\"\n");
+        }
+    } đa hình chỗ nào trong đoạn này
+
+Nhìn thẳng luôn: đa hình trong đoạn code của bạn có, nhưng KHÔNG nằm ở instanceof — mà nằm ở cách gọi method thông qua biến kiểu cha (Model).
+
+🔥 Chỗ có đa hình (quan trọng nhất)
+1. Trong findProductByName()
+for (Model m : list) {
+    if (m.matchesQuery(query)) {
+        m.showFullSpecs();   // ⭐ ĐA HÌNH Ở ĐÂY
+        found = true;
+    }
+}
+👉 m có kiểu Model
+Nhưng thực tế object có thể là:
+
+Iphone
+
+Mac
+
+hoặc class khác kế thừa Model
+
+➡️ Khi gọi:
+
+m.showFullSpecs();
+👉 Java sẽ quyết định gọi hàm của class con tương ứng (runtime)
+
+➡️ Đây chính là đa hình runtime (overriding)
+
+🔹 Ví dụ rõ hơn
+class Model {
+    void showFullSpecs() {
+        System.out.println("Generic model");
+    }
+}
+
+class Iphone extends Model {
+    void showFullSpecs() {
+        System.out.println("iPhone specs");
+    }
+}
+
+class Mac extends Model {
+    void showFullSpecs() {
+        System.out.println("Mac specs");
+    }
+}
+Model m = new Iphone();
+m.showFullSpecs();  // 👉 gọi của Iphone
+➡️ Cùng 1 lệnh nhưng hành vi khác → đa hình
+
+⚠️ Chỗ KHÔNG phải đa hình (dễ nhầm)
+2. instanceof
+if (m instanceof Iphone)
+👉 Đây không phải đa hình
+→ chỉ là kiểm tra kiểu (type checking)
+
+3. m.toString(); ❌ (bị sai logic luôn)
+m.toString();
+👉 Bạn chỉ gọi hàm nhưng không in ra
+
+✔ Phải sửa thành:
+
+System.out.println(m.toString());
+hoặc:
+
+System.out.println(m);
+👉 toString() cũng là đa hình nếu bạn override trong Iphone, Mac
+
+🔥 Tổng kết nhanh
+Chỗ	Có phải đa hình không	Vì sao
+m.showFullSpecs()	✅	Gọi method override của class con
+m.matchesQuery()	✅ (nếu override)	Có thể mỗi class xử lý khác
+m.toString()	✅ (nếu override)	Java gọi đúng version runtime
+instanceof	❌	Chỉ kiểm tra kiểu
+💡 Gợi ý nâng cấp code (xịn hơn)
+Bạn đang dùng:
+
+if (m instanceof Iphone)
+👉 Cách này không tận dụng đa hình tốt
+
+✔ Nên làm:
+
+m.show(); // mỗi class tự quyết định hiển thị gì
+→ bỏ luôn instanceof → code sạch + chuẩn OOP hơn
+
+Nếu bạn muốn, mình có thể:
+
+Sửa lại toàn bộ code theo chuẩn đa hình “đúng bài thi” 🔥
+
+Hoặc chỉ ra bẫy giáo viên hay hỏi trong đoạn này 😈
+
+
+public static void applyDiscountByName() {
+        System.out.print("Enter product name to discount: ");
+        String name = sc.nextLine().trim();
+
+        boolean found = false;
+        for (Model m : list) {
+            if (m.getName().equalsIgnoreCase(name)) {
+                System.out.print("Enter discount percentage (e.g. 10 for 10%): ");
+                double pct = Double.parseDouble(sc.nextLine().trim());
+                m.discountPrice(pct);
+                found = true;
+            }
+        }
+        if (!found) {
+            System.out.println("Product not found!\n");
+        }
+    }
+
+    public static void applyDiscountToAll() {
+        System.out.print("Enter discount % to apply to ALL products: ");
+        double pct = Double.parseDouble(sc.nextLine().trim());
+        System.out.println();
+        for (Model m : list) {
+            m.discountPrice(pct);
+        }
+    }
+
+Đoạn này của bạn có đa hình rất rõ, và còn “chuẩn bài thi OOP” luôn. Mình chỉ ra chính xác cho bạn 👇
+
+🔥 Chỗ có đa hình
+1. Dòng quan trọng nhất
+m.discountPrice(pct);   // ⭐ ĐA HÌNH
+👉 m có kiểu Model
+Nhưng object thực tế có thể là:
+
+Iphone
+
+Mac
+
+hoặc class khác
+
+➡️ Khi chạy:
+
+Nếu m là Iphone → gọi Iphone.discountPrice()
+
+Nếu m là Mac → gọi Mac.discountPrice()
+
+👉 Java quyết định lúc runtime
+
+➡️ Đây chính là:
+
+✅ Đa hình runtime (method overriding)
+🔹 Ví dụ minh họa
+class Model {
+    void discountPrice(double pct) {
+        System.out.println("Generic discount");
+    }
+}
+
+class Iphone extends Model {
+    void discountPrice(double pct) {
+        System.out.println("iPhone discount " + pct + "%");
+    }
+}
+
+class Mac extends Model {
+    void discountPrice(double pct) {
+        System.out.println("Mac discount " + pct + "%");
+    }
+}
+Model m = new Iphone();
+m.discountPrice(10); 
+➡️ Kết quả: iPhone discount 10%
+
+🔥 Cả 2 hàm đều dùng đa hình
+1. applyDiscountByName()
+if (m.getName().equalsIgnoreCase(name)) {
+    m.discountPrice(pct);  // đa hình
+}
+👉 Chỉ giảm giá đúng sản phẩm tìm thấy
+
+2. applyDiscountToAll()
+for (Model m : list) {
+    m.discountPrice(pct);  // đa hình
+}
+👉 Giảm giá toàn bộ sản phẩm
+
+⚠️ Bẫy dễ dính (rất hay ra thi)
+❌ 1. So sánh tên có thể fail
+m.getName().equalsIgnoreCase(name)
+👉 Nếu user nhập:
+
+"iphone 14 "
+→ có khoảng trắng → không match
+
+✔ Fix tốt hơn:
+
+m.getName().trim().equalsIgnoreCase(name.trim())
+❌ 2. Lỗi nhập số
+double pct = Double.parseDouble(sc.nextLine().trim());
+👉 Nếu nhập chữ → crash (NumberFormatException)
+
+✔ Nên bọc:
+
+try {
+    double pct = Double.parseDouble(sc.nextLine().trim());
+} catch (Exception e) {
+    System.out.println("Invalid number!");
+}
+❌ 3. Không validate % giảm giá
+👉 User nhập:
+
+-10 hoặc 200
+✔ Nên check:
+
+if (pct < 0 || pct > 100) {
+    System.out.println("Invalid discount!");
+    return;
+}
+🔥 Tóm lại (ngắn gọn dễ nhớ)
+m.discountPrice(pct) → đa hình
+
+Vì:
+
+Biến kiểu cha (Model)
+
+Gọi method bị override ở class con
+
+Quyết định lúc chạy
+
+💡 Nâng cấp xịn hơn (chuẩn OOP)
+Bạn có thể cho mỗi class xử lý khác nhau:
+
+class Iphone extends Model {
+    void discountPrice(double pct) {
+        price *= (1 - pct/100);
+        System.out.println("iPhone discounted");
+    }
+}
+
+class Mac extends Model {
+    void discountPrice(double pct) {
+        price *= (1 - pct/100);
+        System.out.println("Mac discounted + free accessory");
+    }
+}
+👉 Cùng 1 lệnh gọi → hành vi khác
+➡️ Đây chính là sức mạnh thật sự của đa hình
+
+Nếu bạn muốn, mình có thể:
+
+Viết lại full chương trình theo chuẩn OOP đẹp (không cần instanceof)
+
+Hoặc tạo đề thi kiểu này + đáp án chi tiết 😈
+
+
+
+🔥 Tóm lại (ngắn gọn dễ nhớ) ---------------------------- * `m.discountPrice(pct)` → **đa hình** * Vì: * Biến kiểu cha (`Model`) * Gọi method bị override ở class con * Quyết định lúc chạy
+
+tại sao
+
+Câu “tại sao” của bạn là đúng trọng tâm OOP luôn 👍
+Mình giải thích bản chất bên trong cho bạn hiểu rõ, không học vẹt nữa:
+
+🔥 Vì sao m.discountPrice(pct) là đa hình?
+👉 1. Kiểu khai báo ≠ kiểu thực tế
+Model m;
+👉 Đây gọi là kiểu tham chiếu (reference type) → Model
+
+Nhưng khi gán:
+
+m = new Iphone();   // hoặc new Mac()
+👉 Object thật nằm trong bộ nhớ là:
+
+Iphone hoặc Mac
+
+🔥 2. Java quyết định hàm khi CHẠY (runtime)
+Khi bạn gọi:
+
+m.discountPrice(pct);
+👉 Java KHÔNG nhìn vào:
+
+Model m
+👉 Mà nhìn vào:
+
+object thật mà m đang trỏ tới
+🔹 Minh họa cực dễ hiểu
+Model m = new Iphone();
+m.discountPrice(10);
+👉 Java sẽ nghĩ:
+
+"À, m đang trỏ tới Iphone → gọi hàm của Iphone"
+
+🔥 3. Cơ chế phía sau (quan trọng)
+Java dùng cơ chế:
+
+👉 Dynamic Method Dispatch
+Nghĩa là:
+
+Không quyết định trước
+
+Đợi tới lúc chạy mới chọn method
+
+🔹 So sánh để dễ hiểu
+❌ Nếu KHÔNG đa hình (giả sử)
+Java sẽ gọi:
+
+Model.discountPrice()
+👉 Nhưng như vậy thì:
+
+iPhone, Mac đều giống nhau ❌
+→ mất ý nghĩa OOP
+
+✅ Với đa hình (thực tế)
+m.discountPrice()
+→ Có thể là:
+
+Iphone.discountPrice()
+
+Mac.discountPrice()
+
+👉 Tùy object → linh hoạt
+
+🔥 4. Điều kiện để xảy ra đa hình
+Để dòng này:
+
+m.discountPrice(pct);
+là đa hình thì cần:
+
+✔ 1. Kế thừa
+class Iphone extends Model
+✔ 2. Override
+@Override
+void discountPrice(double pct)
+✔ 3. Gọi qua biến cha
+Model m = new Iphone();
+🔥 Tóm lại (bản chất thật)
+👉 Vì:
+
+m chỉ là “nhãn” (label) kiểu Model
+
+Object thật là Iphone / Mac
+
+Java chọn method dựa trên object thật lúc runtime
+
+➡️ Nên:
+
+m.discountPrice(pct)
+= đa hình
+
+💡 Ví dụ đời thường cho dễ nhớ
+Bạn gọi:
+
+“Nhân viên làm việc”
+
+Nhưng:
+
+Nhân viên IT → code 💻
+
+Nhân viên sale → bán hàng 💰
+
+👉 Cùng 1 lệnh "làm việc"
+→ hành động khác nhau
+
+➡️ ĐÓ chính là đa hình
+
+Nếu bạn muốn, mình có thể:
+
+Giải thích sâu hơn kiểu bảng stack/heap (rất hay ra thi)
+
+Hoặc đưa câu hỏi trắc nghiệm bẫy đa hình 😈
+
+
+tại sao lại cần abstrac class
+
+Câu này là cốt lõi OOP luôn. Mình nói thẳng bản chất để bạn hiểu “tại sao phải cần abstract class”, không học thuộc 👇
+
+🔥 Vì sao cần abstract class?
+👉 1. Vì có những lớp KHÔNG nên tạo object
+Ví dụ của bạn:
+
+class Model {
+    String name;
+    double price;
+}
+👉 Bạn có muốn tạo:
+
+new Model();
+❌ Không hợp lý
+→ Vì “Model” quá chung chung, không phải sản phẩm cụ thể
+
+✔ Thay vào đó:
+
+abstract class Model {
+    String name;
+    double price;
+}
+👉 Nghĩa là:
+
+Model chỉ là khuôn mẫu
+
+Không được tạo object trực tiếp
+
+🔥 2. Ép class con phải viết lại method (rất quan trọng)
+Bạn có:
+
+abstract class Model {
+    abstract void discountPrice(double pct);
+}
+👉 Bắt buộc:
+
+class Iphone extends Model {
+    void discountPrice(double pct) {
+        // phải viết
+    }
+}
+❌ Nếu không dùng abstract:
+
+class Model {
+    void discountPrice(double pct) {
+        // để trống hoặc viết đại
+    }
+}
+👉 Class con có thể:
+
+Không override ❌
+
+Gây lỗi logic ❌
+
+🔥 3. Dùng chung code nhưng vẫn cho phép khác nhau
+abstract class Model {
+    String name;
+
+    void showName() {
+        System.out.println(name);
+    }
+
+    abstract void showFullSpecs();
+}
+👉 Nghĩa là:
+
+showName() → dùng chung
+
+showFullSpecs() → mỗi loại tự làm
+
+🔥 4. Kết hợp với đa hình (mạnh nhất)
+Model m = new Iphone();
+m.showFullSpecs();
+👉 Nhờ abstract:
+
+Bạn biết chắc mọi class con đều có showFullSpecs()
+
+➡️ Không cần instanceof
+➡️ Code sạch hơn
+
+🔥 So sánh cho dễ hiểu
+Không abstract	Có abstract
+Có thể tạo object vô nghĩa	Ngăn tạo object
+Không bắt override	Bắt buộc override
+Dễ lỗi logic	Code chặt chẽ
+Không rõ thiết kế	Rõ ràng
+🔥 Ví dụ đời thường
+👉 Model giống như:
+
+“Phương tiện”
+
+Bạn không thể có:
+
+“một phương tiện chung chung”
+
+Nhưng có:
+
+Xe máy 🏍
+
+Ô tô 🚗
+
+🔥 Khi nào nên dùng abstract?
+✔ Khi:
+
+Lớp chỉ mang tính khái niệm
+
+Có hành vi chung + hành vi riêng
+
+Muốn ép class con phải triển khai
+
+❗ Khi nào KHÔNG cần?
+❌ Nếu:
+
+Lớp dùng trực tiếp
+
+Không có method cần override
+
+🔥 Tóm lại (câu thi)
+👉 Dùng abstract class để:
+
+Không cho tạo object lớp cha
+
+Ép class con phải override method
+
+Tạo khung chuẩn cho các class con
+
+Hỗ trợ đa hình tốt hơn
+
+Nếu bạn muốn, mình có thể:
+
+So sánh abstract class vs interface (câu này hay ra thi nhất) 🔥
+
+Hoặc sửa code của bạn thành chuẩn abstract + đa hình 100% 🚀
+
+
+đa hình thì khi chạy code java sẽ gọi đến method override chứ không gọi method ở class cha?
+
+Câu này bạn hiểu gần đúng rồi, nhưng cần chỉnh lại cho chính xác 100% 👇
+
+✅ Kết luận đúng
+👉 Khi có override và gọi qua biến kiểu cha → Java sẽ gọi method ở class con (runtime)
+
+Model m = new Iphone();
+m.discountPrice(10);
+➡️ Gọi: Iphone.discountPrice() ✅
+
+⚠️ Nhưng KHÔNG phải lúc nào cũng vậy
+🔹 Trường hợp 1: Có override → gọi class con
+class Model {
+    void show() {
+        System.out.println("Model");
+    }
+}
+
+class Iphone extends Model {
+    void show() {
+        System.out.println("Iphone");
+    }
+}
+Model m = new Iphone();
+m.show();
+👉 Kết quả:
+
+Iphone
+🔹 Trường hợp 2: KHÔNG override → gọi class cha
+class Model {
+    void show() {
+        System.out.println("Model");
+    }
+}
+
+class Iphone extends Model {
+    // không override
+}
+Model m = new Iphone();
+m.show();
+👉 Kết quả:
+
+Model
+➡️ Vì class con không có method → dùng của cha
+
+🔹 Trường hợp 3: method static → KHÔNG đa hình
+class Model {
+    static void show() {
+        System.out.println("Model static");
+    }
+}
+
+class Iphone extends Model {
+    static void show() {
+        System.out.println("Iphone static");
+    }
+}
+Model m = new Iphone();
+m.show();
+👉 Kết quả:
+
+Model static
+➡️ Vì static → quyết định lúc compile (không đa hình)
+
+🔹 Trường hợp 4: gọi bằng object trực tiếp
+Iphone m = new Iphone();
+m.show();
+👉 Luôn gọi Iphone
+→ không liên quan đa hình
+
+🔥 Bản chất quan trọng (rất hay ra thi)
+👉 Java có 2 kiểu binding:
+
+Loại	Khi nào	Ví dụ
+Static binding	compile	static, final, private
+Dynamic binding	runtime	method override
+🔥 Tóm lại (chuẩn thi)
+👉 Không phải luôn gọi class con
+
+✔ Chỉ khi:
+
+Có override
+
+Gọi qua biến kiểu cha
+
+➡️ Thì Java mới:
+
+gọi method của object thật (class con)
+
+💡 Câu trả lời ngắn gọn bạn có thể dùng đi thi
+Khi sử dụng đa hình, nếu phương thức được override thì Java sẽ gọi phương thức của lớp con tại runtime (dynamic binding). Nếu không override thì sẽ gọi phương thức của lớp cha.
+
+Nếu bạn muốn, mình có thể:
+
+Cho bạn 5 câu trắc nghiệm bẫy đa hình (rất dễ sai) 😈
+
+Hoặc giải thích thêm super, final, private ảnh hưởng đa hình thế nào 🚀
+
+
+tại sao phải cần interphace
+
+Câu này rất hay vì nhiều người học OOP biết interface nhưng không hiểu “tại sao cần”. Mình giải thích theo kiểu bản chất + thực tế luôn 👇
+
+🔥 Vì sao cần interface?
+👉 1. Java không hỗ trợ đa kế thừa class
+class A {}
+class B {}
+
+// ❌ Không làm được
+class C extends A, B {}
+👉 Nhưng với interface:
+
+interface Flyable {
+    void fly();
+}
+
+interface Swimmable {
+    void swim();
+}
+
+class Duck implements Flyable, Swimmable {
+    public void fly() {}
+    public void swim() {}
+}
+➡️ Một class có thể implement nhiều interface
+👉 Giải quyết bài toán đa kế thừa
+
+👉 2. Tạo “chuẩn chung” (contract)
+interface Payment {
+    void pay(double amount);
+}
+👉 Nghĩa là:
+
+Bất kỳ class nào implement đều phải có pay()
+
+class Momo implements Payment {
+    public void pay(double amount) {
+        System.out.println("Pay by Momo");
+    }
+}
+
+class CreditCard implements Payment {
+    public void pay(double amount) {
+        System.out.println("Pay by Card");
+    }
+}
+➡️ Tất cả đều tuân theo một chuẩn
+
+👉 3. Tăng tính linh hoạt (đa hình mạnh hơn)
+Payment p;
+
+p = new Momo();
+p.pay(100);
+
+p = new CreditCard();
+p.pay(200);
+👉 Không cần biết cụ thể là gì
+→ chỉ cần biết nó là Payment
+
+➡️ Đây là đa hình cực mạnh
+
+👉 4. Giảm phụ thuộc (loose coupling)
+❌ Code tệ:
+
+Momo m = new Momo();
+✔ Code tốt:
+
+Payment p = new Momo();
+👉 Sau này đổi sang:
+
+p = new CreditCard();
+➡️ Không cần sửa logic chính
+
+👉 5. Tách thiết kế và triển khai
+Interface → định nghĩa
+
+Class → thực hiện
+
+interface Shape {
+    double area();
+}
+class Circle implements Shape {
+    public double area() { return 3.14 * r * r; }
+}
+🔥 So sánh với abstract class
+abstract class	interface
+Có thuộc tính	✔	❌ (chỉ hằng)
+Có method thường	✔	❌ (Java 8+ có default)
+Đa kế thừa	❌	✔
+Mục đích	lớp cha	chuẩn chung
+🔥 Khi nào dùng interface?
+✔ Khi:
+
+Muốn nhiều class khác nhau có cùng hành vi
+
+Không liên quan kế thừa trực tiếp
+
+Cần đa kế thừa
+
+Muốn code linh hoạt, dễ thay đổi
+
+🔥 Ví dụ sát với bài của bạn
+interface Discountable {
+    void discountPrice(double pct);
+}
+class Iphone extends Model implements Discountable {
+    public void discountPrice(double pct) {
+        // xử lý riêng
+    }
+}
+class Mac extends Model implements Discountable {
+    public void discountPrice(double pct) {
+        // xử lý khác
+    }
+}
+👉 Sau đó:
+
+for (Discountable d : list) {
+    d.discountPrice(10);
+}
+➡️ Không cần biết nó là Iphone hay Mac
+
+🔥 Tóm lại (chuẩn câu thi)
+👉 Dùng interface để:
+
+Tạo chuẩn chung cho nhiều class
+
+Hỗ trợ đa kế thừa
+
+Giảm phụ thuộc giữa các class
+
+Tăng tính linh hoạt và đa hình
+
+💡 Hiểu nhanh 1 câu
+Abstract class = “là gì” (is-a)
+Interface = “làm được gì” (can-do)
+
+Nếu bạn muốn, mình có thể:
+
+Cho bạn bài tập interface + đa hình giống đề thi 🔥
+
+Hoặc chỉ ra bẫy cực hay: interface vs abstract nên chọn cái nào 😈
+what is the mistake in my project
+
+7:48 PM
+Looking at your code, here are the bugs I found:
+
+1. Main.java — Missing break in case 0
+
+java
+case 0:
+    Service.shop();
+    // ❌ Missing break! Falls through to case 1
+case 1:
+    Service.showIphoneList();
+    break;
+Selecting "Shop" will also trigger "Show iPhone list".
+
+2. Service.java — addIphone() passes null for RAM
+
+java
+Model currentModel = new Iphone(rearCamera, frontCamera, charging, port, waterResistance,
+    dimensions, displayType, type, id, name, screenSize, displayTechnology,
+    resolution, refreshRate, chipset, gpu, null, internalStorage, ...);
+//                                               ^^^^ RAM is hardcoded null
+You collected no RAM input for iPhone, so it's always null.
+
+3. Service.java — addMac() passes null for screenSize and launchDate
+
+java
+Model currentModel = new Mac(battery, brightness, display, neuralEngine, type, id, name,
+    null, display, resolution, ...  weight, null, price);
+//  ^^^^                                           ^^^^
+// screenSize = null                          launchDate = null
+Neither field is collected from the user.
+
+4. Service.java — addMac() has a broken PrintWriter (commented-out but wrong)
+
+java
+// FileWriter fw = new FileWriter("Demo.txt", true);
+// PrintWriter pw = new PrintWriter(pw);  ❌ pw references itself
+This would cause a compile error if uncommented. It should be new PrintWriter(fw).
+
+5. Model.java — showBasicInfo() is not abstract
+
+java
+public void showBasicInfo() { }  // empty, should be abstract
+Since both Iphone and Mac override it, Model should be declared abstract with an abstract method, preventing accidentally calling the empty base version.
+
+Summary table:
+
+File	Issue	Severity
+Main.java	Missing break in case 0	🔴 Logic bug
+Service.java	null RAM in addIphone()	🔴 Data bug
+Service.java	null screenSize & launchDate in addMac()	🔴 Data bug
+Service.java	PrintWriter(pw) self-reference	🟡 Compile error if uncommented
+Model.java	showBasicInfo() not abstract	🟡 Design issue
+Type=iphone
+Name=iPhone 17 Pro
+ID=iIP17P
+Screen Size=6.3 inches
+Display Technology=Super Retina XDR
+Resolution=2622 x 1206 pixels
+Refresh Rate=120Hz
+Display Type=Dynamic Island
+Rear Camera=48MP f/1.6 OIS
+Front Camera=18MP Center Stage f/1.9
+Chipset=A19 Pro
+GPU=6-core GPU
+Internal Storage=256GB
+Operating System=iOS 26
+Dimensions=150 x 71.9 x 8.75 mm
+Weight=204g
+Charging=MagSafe 25W, Qi2 25W
+Port=USB-C
+Water Resistance=IP68
+Connectivity=Wi-Fi 7, Bluetooth 6
+Launch Date=09/2025
+Price=34.190.000 vnd
+Type=iphone
+Name=iPhone 16 Air
+ID=IP16A
+Screen Size=6.5 inches
+Display Technology=Super Retina XDR
+Resolution=2736 x 1260 pixels
+Refresh Rate=120Hz
+Display Type=Dynamic Island
+Rear Camera=48MP Fusion Main f/1.6
+Front Camera=18MP Center Stage
+Chipset=A19 Pro
+GPU=5-core GPU
+Storage=256GB
+Operating System=iOS 26
+Dimensions=156.2 × 74.7 × 5.6 mm
+Weight=165g
+Charging=MagSafe 20W, Qi2 20W
+Port=USB-C
+Water Resistance=IP68
+Connectivity=Wi-Fi 7, Bluetooth 6
+Launch Date=09/2025
+Price=24.990.000 vnd
+Type=iphone
+Name=iPhone 15
+ID=IP15
+Screen Size=6.1 inches
+Display Technology=Super Retina XDR OLED
+Resolution=2556 x 1179 pixels
+Refresh Rate=60Hz
+Rear Camera=Main 48MP + 12MP
+Front Camera=12MP f/1.9
+Chipset=A16 Bionic
+GPU=5-core GPU
+RAM=6GB
+Storage=256GB
+Operating System=iOS 17
+Dimensions=147.6 x 71.6 x 7.8 mm
+Weight=171g
+Battery=3349 mAh
+Charging=MagSafe 15W
+Port=USB-C
+Water Resistance=IP68
+Connectivity=Wi-Fi 6, Bluetooth 5.3
+Launch Date=09/2023
+Price=20.790.000 vnd
+Type=iphone
+Name=iPhone 13
+ID=IP13
+Screen Size=6.1 inches
+Display Technology=Super Retina XDR OLED
+Resolution=2532 x 1170 pixels
+Refresh Rate=60Hz
+Rear Camera=12MP Wide + 12MP Ultra Wide
+Front Camera=12MP f/2.2
+Chipset=A15
+RAM=4GB
+Storage=256GB
+Operating System=iOS 15
+Dimensions=146.7 x 71.5 x 7.65 mm
+Weight=174g
+Charging=20W + Wireless
+Port=Lightning
+Water Resistance=IP68
+Connectivity=Wi-Fi 6, Bluetooth 5.0
+Launch Date=09/2021
+Price=14.990.000 vnd
+Type=mac
+Name=MacBook Air M4
+ID=MAM4
+CPU=10-core
+GPU=8-core
+Neural Engine=16-core
+RAM=16GB
+Storage=256GB
+Display=13.6" Liquid Retina
+Resolution=2560 x 1664
+Brightness=500 nits
+Refresh Rate=120Hz
+Weight=1.24 kg
+Battery=53.8 Wh
+Connectivity=Wi-Fi 6E, Bluetooth 5.3
+OS=macOS
+Price=25.290.000 vnd
+Type=mac
+Name=MacBook Air M2
+ID=MAM2
+CPU=Apple M2 (8-core)
+GPU=8-core
+Neural Engine=16-core
+RAM=16GB
+Storage=256GB
+Display=13.6" Liquid Retina
+Resolution=2560 x 1664
+Brightness=500 nits
+Refresh Rate=120Hz
+Weight=1.27 kg
+Battery=52.6 Wh
+Connectivity=Wi-Fi 6, Bluetooth 5.0
+OS=macOS
+Price=19.690.000 vnd
+Type=mac
+Name=MacBook Pro M4
+ID=MPM4
+CPU=12-core
+GPU=16-core
+Neural Engine=16-core
+RAM=24GB
+Storage=512GB
+Display=14.2" Liquid Retina XDR
+Resolution=3024 x 1964
+Brightness=500 nits
+Refresh Rate=120Hz
+Weight=1.60 kg
+Battery=72.4 Wh
+Connectivity=Wi-Fi 6E, Bluetooth 5.3
+OS=macOS
+Price=49.990.000 vnd
+Type=mac
+Name=MacBook Pro M5
+ID=MPM5
+CPU=10-core
+GPU=10-core
+Neural Engine=16-core
+RAM=32GB
+Storage=1TB
+Display=14.2" Liquid Retina XDR
+Resolution=3024 x 1964
+Brightness=500 nits
+Refresh Rate=120Hz
+Weight=1.55 kg
+Battery=72.4 Wh
+Connectivity=Wi-Fi 6E, Bluetooth 5.3
+OS=macOS
+Price=51.790.000 vnd
+fix this text file and code to become easier
+
+Show more
+7:57 PM
+Looking at your data and code, I can see several inconsistencies. Let me fix both.
+
+Issues found:
+
+Data file uses inconsistent keys (Storage vs Internal Storage, Display Technology vs Display)
+iPhone 15 and 13 have Battery and RAM fields not handled in iPhone's parser
+readFile has duplicate key handling (Display Technology and Display both map to same field)
+showIphoneList and showMacList use toString() instead of showBasicInfo()
+findProductByName also uses toString() instead of showBasicInfo()
+case 0 missing break in Main.java
+Let me fix everything:
+
+
+Created 4 files, read a file
+Created 4 files, read a file
+Here's a summary of every change made:
+
+Data.txt
+
+Standardised all storage keys to Internal Storage for iPhones
+Added missing RAM to iPhone 17 Pro and iPhone 16 Air
+Added missing Display Type to iPhone 15 and 13
+Added missing GPU to iPhone 13
+Removed Battery from iPhones (it's a Mac-only field in your model)
+Added blank lines between entries for readability
+Model.java
+
+Declared abstract so showBasicInfo() is now an abstract method — subclasses are forced to implement it and you can never accidentally call an empty version
+Service.java
+
+readFile: splits on the first = only (handles values that contain =), and removed duplicate Display/Display Technology handling cleanly
+showIphoneList, showMacList, shop, findProductByName: all now call showBasicInfo() instead of toString()
+addIphone: added RAM input (was null before)
+addMac: cleaned up constructor call (was passing wrong argument order)
+Renamed inner sc in readFile to fileSc to avoid shadowing the class-level scanner
+Main.java
+
+Added missing break after case 0
+Added sc.nextLine() after sc.nextInt() to consume the leftover newline (prevents input bugs in findProductByName)
+Data
+TXT 
+Model
+Code · JAVA 
+Service
+Code · JAVA 
+Main
+Code · JAVA 
+make a demo to show me wath can i put or change in this project to show abstract, inter face and polymophism
+
+8:03 PM
+Here's an interactive demo — click each concept to explore it with live code examples from your own project.
+
+
+
+Click through the four tabs to explore each concept. Here's the quick summary:
+
+Abstract class — Model becomes abstract, and showBasicInfo() becomes an abstract method. This prevents anyone from doing new Model() accidentally, and forces every subclass to provide a real implementation.
+
+Interface — you'd add two new files: Displayable (with showBasicInfo + showFullSpecs) and Searchable (with matchesQuery). Both Iphone and Mac then implement them. The key difference from abstract: a class can only extend one parent, but it can implement many interfaces.
+
+Polymorphism — this is already half-working in your Service.java. The List<Model> holds both Iphone and Mac objects, and when you call m.showBasicInfo(), Java automatically runs the right version. You just need to switch from m.toString() to m.showBasicInfo() in the show/find methods.
+
+Click any "Generate..." button in the demo to get the actual code written for your project.
+
+replace showBasicInfo() by  a method name (discount price) ask user to type a percentage % so the price will decrease after that (this method show polymorphism), change some data types at attribute, made class model becomes abtracs class, and made interfaces like u said
+
+8:12 PM
+
+Orchestrated comprehensive refactor: interfaces, abstract model, polymorphic discount method
+Orchestrated comprehensive refactor: interfaces, abstract model, polymorphic discount method
+Let me write all 8 files now.
+
+
+Created 9 files, ran a command, read a file
+Created 9 files, ran a command, read a file
+Here's a full summary of every change made and why:
+
+Data type changes in Model.java
+
+Field	Was	Now	Why
+price	String	double	Enables math (discount calculation)
+ram	String	int	RAM is always a number (GB)
+refreshRate	String	int	Always a number (Hz)
+Data.txt was updated to match — Price=34190000, RAM=8, Refresh Rate=120 (no units in the file).
+
+Abstract class — Model.java
+
+Declared abstract class Model
+discountPrice(double percentage) is the new abstract method — every subclass must implement it
+Added a protected applyDiscount() helper that does the math and updates price, so both subclasses share the calculation logic
+Added a static formatPrice() helper: 34190000 → "34.190.000 vnd"
+Two interfaces
+
+Displayable — showBasicInfo() (one-line summary) and showFullSpecs() (full details)
+Searchable — matchesQuery(String query) — Model provides a default, subclasses extend it with their own fields
+Polymorphism with discountPrice() The clearest demo is menu option 7 (Discount ALL):
+
+java
+for (Model m : list)
+    m.discountPrice(pct);   // same call — iPhone shows ╔══╗ style, Mac shows ┌──┐ style
+One line, one method call — but the output looks completely different for each type. That is runtime polymorphism.
